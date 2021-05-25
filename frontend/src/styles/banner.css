@@ -1,0 +1,56 @@
+
+@media (min-width: 64rem) {
+    .hero-elem-deco{
+        height: 1400px;
+        position: absolute;
+        left: 20rem;
+        top: -35rem;
+        border-radius:50%;
+        z-index: -1;
+        background-color: #303C63;
+        width: 1900px;
+        overflow: hidden;
+    }
+}
+.logoBlack{
+    width: 16rem;
+}
+.logoWhite{
+    display: none;
+}
+
+.imgAcc{
+    display: none;
+}
+
+.monsieur{
+    display: none;
+}
+@media (min-width: 64rem){
+    .logoBlack{
+        display: none;
+       
+    }
+   
+    .logoWhite{
+        display: block;
+        position: absolute;
+        width: 16rem;
+        top:0;
+        left: 25rem;
+    }
+    .imgAcc{
+        display: block;
+        position: absolute;
+        right: 20rem;
+        bottom : 0rem
+    
+    }
+    
+    .monsieur{
+        display: block;
+        position: absolute;
+        left: 0rem;
+        top : 0rem;
+    }
+}
