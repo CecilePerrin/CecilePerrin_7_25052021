@@ -1,0 +1,6 @@
+const Post = () => {
+    return(g);
+    
+     
+};
+

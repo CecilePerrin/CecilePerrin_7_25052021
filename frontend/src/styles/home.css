@@ -1,0 +1,12 @@
+.logo{
+    height: 5vmin;
+    pointer-events: none;
+};
+.title_home{
+    color:#D14662;
+    font-weight: bold;
+};
+
+.card{
+    width: 50%;
+}

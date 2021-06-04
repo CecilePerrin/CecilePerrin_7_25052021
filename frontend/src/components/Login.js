@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styles/login.css";
 import { Link } from "react-router-dom";
+import Banner from './Banner'
 
 
 const Login = () => {
 
 	return (
 		<>
+		<Banner/>
 		<div className="header">
 			<div className="containerLink">
 							<p className="textLink">Vous n'avez pas de compte?</p>
@@ -42,11 +44,11 @@ const Login = () => {
 						placeholder="Mot de passe"
 						autoFocus
 					/>
-				</div>{" "}
+				</div>
 				<h2 id="emailHelp" className="form-text" aria-hidden="true"></h2>
-				<button type="submit" className="btn btn-primary btn-connexion">
+				<Link to="/Home" type="submit" className="btn btn-primary btn-connexion">
 					Se connecter
-				</button>
+				</Link>
 			</form>
 			</div>
 			<footer >
