@@ -46,7 +46,7 @@ const SignUp = () => {
                                     type="text"
                                     className="form-control input-login"
                                     name="firstName"
-                                    id="validationServer03"
+                                    id="validationServer01"
                                     placeholder="Dupuis"                                 
                                     {...register("firstName", {pattern: /^[A-Za-z]+$/i})}
                                     autoFocus
@@ -73,7 +73,7 @@ const SignUp = () => {
                                     type="email"
                                     className="form-control input-login"
                                     name="email"
-                                    id="validationServer01"
+                                    id="validationServer02"
                                     aria-describedby="emailHelp"
                                     {...register("email", { pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
                                     placeholder="robert.87@gmail.com"
@@ -88,7 +88,7 @@ const SignUp = () => {
                                     className="form-control input-login "
                                     name="password"
                                     {...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
-                                    id="validationServer02"
+                                    id="validationServer03"
                                     placeholder="Mot de passe"
                                     autoFocus
                                 />
