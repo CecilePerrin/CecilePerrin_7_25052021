@@ -1,0 +1,17 @@
+.logo{
+    height: 9vmin;
+    pointer-events: none;
+};
+.title_home{
+    color:#D14662;
+    font-weight: bold;
+};
+
+.btn-outline-primary{
+    color: #D14662!important;
+    border-color: #D14662!important;
+}
+
+.search-btn:hover{
+    background-color: #D14662;
+}

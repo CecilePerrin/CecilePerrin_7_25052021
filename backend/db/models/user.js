@@ -1,5 +1,6 @@
-'use strict';
+'use strict'
 const { Sequelize,  Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -11,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
+
   User.init(
     {
       firstName: {
@@ -31,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z0-9\d@$!%*?&]{8,}$/, 
-        }
+        // validate: {
+        //   is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z0-9\d@$!%*?&]{8,}$/,
+        // }
       },
     },
     {
@@ -42,6 +44,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
-
-  return User;
-};
+  return User
+}

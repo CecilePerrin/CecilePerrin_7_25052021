@@ -1,6 +1,0 @@
-const Post = () => {
-    return(g);
-    
-     
-};
-

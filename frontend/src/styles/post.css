@@ -1,0 +1,16 @@
+.card{ 
+    max-width: 50%;
+    margin: auto;
+    margin-top: 5%;
+    box-shadow:0.1rem 0.5rem 10px #c2c2c2; 
+}
+/* .card-header{
+    display: flex;
+
+}
+
+.form-control{
+    display: inline;
+    width: 100%;
+}
+ */

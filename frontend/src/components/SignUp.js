@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import {appendErrors, useForm} from 'react-hook-form';
+import React from "react";
+import { useForm } from 'react-hook-form';
 import Banner from './Banner'
-import Axios from 'axios'
+import axios from 'axios'
 import "../styles/login.css";
 import { Link } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,17 +16,22 @@ const schema = yup.object().shape({
 
 
 const SignUp = () => {
+
     const { register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(schema)
     });
    
- 
-    const onSubmit = data =>{
-        Axios.post('http://localhost:4200/api/users/signup',
-        data).then((response)=>{
-            console.log(response);
-        })
-}
+
+        
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+
+    const submitUser = (signup) =>
+        axios.post("http://localhost:4200/api/users/signup", signup, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            },
+        });
+
 
     return (
         <>
@@ -38,10 +43,10 @@ const SignUp = () => {
             </div>
         </div>
             <div className="container row">
-                        <form  onSubmit= {handleSubmit(onSubmit)} className="login container-fluid" >
+                        <form  onSubmit= {handleSubmit(submitUser)} className="login container-fluid" >
                             <h2 className="title-form" >S'inscire à Groupomania</h2>
                             <div className="form-group">
-                                <label htmlFor="Nom" class="form-label">Nom</label>
+                                <label htmlFor="Nom" className="form-label">Nom</label>
                                 <input
                                     type="text"
                                     className="form-control input-login"
@@ -55,7 +60,7 @@ const SignUp = () => {
                                    
                             </div>
                             <div className="form-group">
-                                <label htmlFor="Prenom" class="form-label">Prénom</label>
+                                <label htmlFor="Prenom" className="form-label">Prénom</label>
                                 <input
                                     type="text"
                                     className="form-control input-login"
@@ -68,7 +73,7 @@ const SignUp = () => {
                             <p>{errors.name?.message}</p>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="email" class="form-label">Email</label>
+                                <label htmlFor="email" className="form-label">Email</label>
                                 <input
                                     type="email"
                                     className="form-control input-login"
