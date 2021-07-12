@@ -1,19 +1,20 @@
 const jwt = require('jsonwebtoken');
+const models = require ('../db/models/index')
+const { User } = models.sequelize.models
+
 require('dotenv').config();
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1]; //on va récupérer le token dans le headers en le split ca retourne un tableau
-    const decodedToken = jwt.verify(token, process.env.TOKEN_KEY); //ici on vérifie le token grâce à la clés secret
-    const userId = decodedToken.userId; // une fois le token decodé on obtient un object js on va pourvoir récupérer l'userId dedans que l'on a encoder dedans exprès.
-    if (req.body.userId && req.body.userId !== userId) {
-      throw 'Invalid user ID';
-    } else {
-      next();
-    }
-  } catch {
-    res.status(401).json({
-      error: new Error('Invalid request!')
-    });
-  }
+		const token = req.headers.authorization.split(" ")[1];
+		const decodedToken = jwt.verify(token, "TOKEN_KEY");
+		const user = await models.User.findOne({ where: { id: decodedToken.id } });
+		if (!user) {
+			throw new Error("invalid");
+		}
+		req.user = user;
+		next();
+	} catch (err) {
+		res.status(401).json({ error: "A token must be provided" });
+	}
 };

@@ -17,6 +17,5 @@ const Warning = () => {
 	  }
 	}
 	
-	// render(<Warning />);
 
 export default Warning;

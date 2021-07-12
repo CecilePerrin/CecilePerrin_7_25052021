@@ -1,0 +1,93 @@
+.profile{
+    display: flex;
+}
+
+.profileRight{
+    flex: 9;
+}
+
+.profileCover{
+    height: 320px;
+    position: relative;
+    background-color: #141d38;
+}
+
+
+
+.profileUserImg{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    z-index: 2;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 40%;
+    border: 3px solid white;
+    
+}
+
+.hover{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    z-index: 3;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 40%;
+}
+.hover:hover{
+    cursor: pointer;
+    background-color: rgba(223, 223, 221, 0.288);
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileInfoName{
+    font-size: 24px;
+}
+
+.modifyPicture{
+    z-index: 3;
+    position: absolute;
+    left: 52%;
+    top: 44%;
+    margin: auto;
+    color:#ffffff;
+}
+
+.profileRightBottom{
+    display: flex;
+}
+.profile-container{
+    max-width: 1600px;
+    margin: auto;
+    margin-top: auto;
+    background-color: #f3f3f3;
+    border-radius: 2rem 2rem 0 0;
+    position: relative;
+    z-index: 1;
+    margin-top: -5rem;
+    padding-bottom: 5rem;   
+}
+.suppbtn{
+    margin: auto;
+}
+
+.card{ 
+    max-width: 50%;
+    margin: auto;
+    padding: 3rem;
+    margin-top: 2%;
+    box-shadow:0.1rem 0.5rem 10px #c2c2c2; 
+}
