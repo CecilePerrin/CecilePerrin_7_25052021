@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 		const decodedToken = jwt.verify(token, "TOKEN_KEY");
 		const user = await models.User.findOne({ where: { id: decodedToken.id } });
 		if (!user) {
-			throw new Error("invalid");
+			throw new Error("not valid");
 		}
 		req.user = user;
 		next();

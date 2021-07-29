@@ -73,7 +73,7 @@ exports.login = (req, res, next) =>{
 exports.getOneUser = async (req, res, next) =>{
   try {
     		const user = await models.User.findOne({
-    			attributes: ["id", "email", "name"],
+    			attributes: ["id", "firstName","name", "email"],
     			where: {
     				id: req.user.id
     			}
@@ -88,23 +88,34 @@ exports.getOneUser = async (req, res, next) =>{
     	}
 }
 
-exports.updateProfile = (req, res, next) =>{
-  models.User.findOne({ where: { id: req.user.id } })
+
+  exports.updateProfile = async (req, res, next) =>{   
+       models.User.update(
+         {password: await bcrypt.hash(req.body.password,10)}, 
+         {where: {id: req.user.id}}
+        )
+      .then(()=> res.send("success"))
+      
+      .catch(error => res.status(400).json({error}));
+        
+  };
+
+
+
+exports.deleteProfile =  (req, res, next) =>{
+ models.User.findOne({ where: { id: req.user.id } })
     .then(
-        models.User.update(
-        {email:req.body.email},
-        {password: bcrypt.hash(req.body.password,10)},
-        {where: req.user.id}
-    )
-    .then(function (result) {
-      result.status(200).json({ user });
-    }))
+      models.User.destroy({
+        where:{
+          id:req.user.id 
+        }
+      })
+    .then(
+      res.status(200).json({message: "compte supprimé"})
+    ))
     .catch((err)=>{
       console.log("Error : ",err)
   });
-  }
-
-
-exports.deleteProfile = (req, res, next) =>{
- 
 }
+
+

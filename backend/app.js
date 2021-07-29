@@ -1,4 +1,3 @@
-//app.js gère toute les requêtes envoyées au serveur.
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet')

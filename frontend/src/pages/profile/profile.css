@@ -1,3 +1,7 @@
+@media (min-width: 64rem) {
+    
+}
+
 .profile{
     display: flex;
 }
@@ -9,10 +13,14 @@
 .profileCover{
     height: 320px;
     position: relative;
-    background-color: #141d38;
 }
 
-
+.profileCoverImg{
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    object-position: 80% 20%;
+}
 
 .profileUserImg{
     width: 150px;
@@ -51,6 +59,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 3rem;
+    text-align: start;
 }
 
 .profileInfoName{
@@ -70,6 +80,9 @@
     display: flex;
 }
 .profile-container{
+    display: flex;
+    justify-content: center;
+    height: 100%;
     max-width: 1600px;
     margin: auto;
     margin-top: auto;
@@ -78,16 +91,27 @@
     position: relative;
     z-index: 1;
     margin-top: -5rem;
-    padding-bottom: 5rem;   
+      
 }
 .suppbtn{
     margin: auto;
+    position: relative;
+    
 }
 
 .card{ 
     max-width: 50%;
-    margin: auto;
+    max-height: 45%;
+    margin-right: 3rem;
     padding: 3rem;
-    margin-top: 2%;
     box-shadow:0.1rem 0.5rem 10px #c2c2c2; 
+}
+
+.infoUser{
+    border-bottom: solid #D14662 3.5px;
+}
+
+.card-container{
+    display: flex;
+    margin: 10rem;
 }

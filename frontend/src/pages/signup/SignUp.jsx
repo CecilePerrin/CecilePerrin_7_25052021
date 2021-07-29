@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from 'react-hook-form';
-import Banner from '../../components/Banner'
+import Banner from '../../components/Banner.jsx'
 import axios from 'axios'
 import "../../styles/login.css";
 import { Link } from "react-router-dom";
@@ -8,12 +8,33 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
 // import Warning from "./Warning";
 
+
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+
 const schema = yup.object().shape({
-    firstName: yup.string().required('Veuillez entrer votre Nom'),
-    email: yup.string().required('Veuillez entrer votre email').email(),
-    name: yup.string().required('Veuillez entrer votre Prénom'),
-    password: yup.string().required('veuillez renseigner un mot de passe').min(8)
-});
+	    firstName: yup
+		.string()
+		.required('Veuillez entrer votre Nom'),
+	    email: yup
+		.string()
+		.required('Veuillez entrer votre email')
+		.email('Veuillez rentrer un email valide'),
+	    name: yup
+		.string()
+		.required('Veuillez entrer votre Prénom'),
+	    password: yup
+		.string()
+		.required('veuillez renseigner un mot de passe')
+		.matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
+		.min(8, "votre mot de passe doit faire plus de 8 caractères")
+	});
+
+// const schema = yup.object().shape({
+//     firstName: yup.string().required('Veuillez entrer votre Nom'),
+//     email: yup.string().required('Veuillez entrer votre email').email(),
+//     name: yup.string().required('Veuillez entrer votre Prénom'),
+//     password: yup.string().required('veuillez renseigner un mot de passe').min(8)
+// });
 
 
 const SignUp = () => {
@@ -40,9 +61,10 @@ const SignUp = () => {
         <Banner/>
         <div  className="header">
             <div className="containerLink">
-                                <p className="textLink">Vous n'avez pas de compte?</p>
+                                <p className="textLink">Vous avez un compte?</p>
                                 <Link to="/" className="LinkSignUp"> Se connecter</Link>
             </div>
+            <hr className="divider"></hr>
         </div>
             <div className="container row">
                         <form  onSubmit= {handleSubmit(submitUser)} className="login container-fluid" >
@@ -58,7 +80,7 @@ const SignUp = () => {
                                     {...register("firstName", {pattern: /^[A-Za-z]+$/i})}
                                     autoFocus
                                     />
-                                <p >{errors.firstName?.message}</p>
+                                <p style= {{color:"red"}}>{errors.firstName?.message}</p>
                                    
                             </div>
                             <div className="form-group">
@@ -72,7 +94,7 @@ const SignUp = () => {
                                     placeholder="Robert"
                                     autoFocus
                                 />
-                            <p>{errors.name?.message}</p>
+                            <p style= {{color:"red"}}>{errors.name?.message}</p>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="email" className="form-label">Email</label>
@@ -86,7 +108,7 @@ const SignUp = () => {
                                     placeholder="robert.87@gmail.com"
                                     autoFocus
                                 />
-                            <p>{errors.email?.message}</p>
+                            <p style= {{color:"red"}}>{errors.email?.message}</p>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="exampleInputPassword1">Mot de passe</label>
@@ -99,7 +121,7 @@ const SignUp = () => {
                                     placeholder="Mot de passe"
                                     autoFocus
                                 />
-                                <p>{errors.password?.message}</p>
+                                <p style= {{color:"red"}}>{errors.password?.message}</p>
                             </div>
                             <h2 id="emailHelp" className="form-text" aria-hidden="true"></h2>
                             <button type="submit" className="btn btn-primary btn-connexion">
@@ -108,9 +130,7 @@ const SignUp = () => {
                         </form>
                         
             </div>
-			<footer >
-				<p className="containerTextAccroche">Rejoignez votre team dès aujourd'hui.</p>
-			</footer>
+			
 </>
     );
 }

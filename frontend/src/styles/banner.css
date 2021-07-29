@@ -13,8 +13,11 @@
     }
 }
 .logoBlack{
-    width: 16rem;
+    width: 5rem;
+    margin: 2rem;
+   
 }
+
 .logoWhite{
     display: none;
 }
@@ -35,23 +38,23 @@
     .logoWhite{
         display: block;
         position: absolute;
-        width: 16rem;
+        width: 20rem;
         top:0;
         left: 25rem;
     }
     .imgAcc{
         display: block;
         position: absolute;
-        right: 20rem;
-        bottom : 0rem
+        left: 50%;
+        top:35%;
     
     }
     
     .monsieur{
         display: block;
         position: absolute;
-        left: 0rem;
-        top : 0rem;
+        left: 2rem;
+        top : 5rem;
     }
 }
 
