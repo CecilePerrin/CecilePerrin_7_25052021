@@ -1,110 +1,153 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../../components/UserContext.jsx";
 import { withRouter } from "react-router-dom";
 import CreateIcon from '@material-ui/icons/Create';
 import Nav from "../../components/Nav.jsx"
 import axios from 'axios'
-import PictureProfile from "../../assets/helsdraw.png"
 import userBanner from "../../assets/bannière4.png"
 import "./profile.css"
+import noavatar from "../../assets/noavatar.JPG"
+
 
 
 
 const Profile = () => {
-
+	// const [password] = useRef()
+	// const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+	// const [passwordTest, setPasswordTest] = usestate(false)
 	const [updatePassword, setNewPassword] = useState({ newPassword: "" });
     const { user, setUserData} = useContext(UserContext);
-	const inputFile = useRef(null);
 	const [file, setFile] = useState(null);
-	const onButtonClick = () => {
-	   inputFile.current.click();
-	  };
+	
 
 	const deleteUser = (e) =>{
-		e.preventDfault()
-        axios.delete('http://localhost:4200/api/users/delete',{ headers: { 'Authorization':localStorage.getItem('token') } })
-        .then(response=> {
-			localStorage.clear();
-			window.location = "/";
-			console.log("vous avez supp votre compte")
-			console.log(response)
-		})    
-        .catch(error => console.log(error));
+		e.preventDefault();
+		const answer = window.confirm("êtes vous sûr?");
+		if (answer) {
+			axios.delete('http://localhost:4200/api/users/delete',{ headers: { 'Authorization':localStorage.getItem('token') } })
+			.then(response=> {
+				localStorage.clear();
+				window.location = "/";
+				console.log("vous avez supp votre compte")
+				console.log(response)
+			})    
+			.catch(error => console.log(error));
+		console.log("Thing was deleted to the database.");
+		} else {
+		console.log("Thing was not deleted to the database.");
+		}
 	};
 
-	const uptdatePassword = () =>{
-		axios.put('http://localhost:4200/api/users/update',{password: updatePassword} ,{ headers: { 'Authorization':localStorage.getItem('token') } })
-		.then(response=> {
-			console.log("vous avez changer votre mot de passe")
-			console.log(response)
-		})    
-		.catch(error => console.log(error));
-	};
+
+	const submitHandler = async (e) => {
+		e.preventDefault();
+		
+		if (updatePassword === updatePassword.newPassword || file === null){
+			return null;
+		}
+		else{
+
+			const newImg = {
+				imageUrl: file,
+				password : updatePassword,
+			};
+			
+			const formData = new FormData();
+			formData.append('imageUrl', newImg.imageUrl, newImg.imageUrl.name);
+			formData.append('password', newImg.password);
+		  
+			try {
+			  await axios.put("http://localhost:4200/api/users/update", formData, {
+				headers:{"Content-Type": "multipart/form-data",
+				Authorization: localStorage.getItem('token')
+			  }
+			  });
+			} catch (err) {}
+		}
+	   
+	  };
 
     return (   
     <>
 		<Nav/>
-		<div className="profileRight">
-			<div className="profileRightTop">
-				<div className="profileCover">
-					<img
+		<form onSubmit={submitHandler}>
+			<div className="profileRight">
+				<div className="profileRightTop">
+					<div className="profileCover">
+						<img
 							className="profileCoverImg"
 							src={userBanner}
 							alt=""
-					/>
-					<div className = "hover"></div>
-						<img
-							className="profileUserImg"
-							src={PictureProfile}
-							alt=""
 							/>
-					<form className="shareBottom">
-						<label htmlFor="file" className="shareOption">
-							<CreateIcon className="modifyPicture" onClick={onButtonClick}/>
-								<input
-									style={{ display: "none" }}
-									type="file"
-									id="file"
-									ref={inputFile}
-									accept=".png,.jpeg,.jpg"
-								/>
-						</label>
-					</form>	
+							<img 
+								className = "backgroundImg"
+								alt=""
+					
+							/>
+						
+								{file ?(
+									<>
+										<img 
+										className = "hover"
+										src={URL.createObjectURL(file)}
+										alt=""
+										/>
+									</>
+								):<img	
+								className="profileUserImg"
+								src={
+									user.imageUrl
+									? user.imageUrl
+									:  noavatar
+								}
+								alt=""
+								/>}
+						<div className="shareBottom">
+							<label htmlFor="file" className="shareOption">
+							<CreateIcon className="modifyPicture" />
+							<input
+							style={{ display: "none" }}
+							type="file"
+							id="file"
+							accept=".png,.jpeg,.jpg"
+							onChange={(e) => setFile(e.target.files[0])}
+							/>
+							</label>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-		<div className ="profile-container">
-			<div className ="card-container">
-				<div className="card welcome">
-					<form  className="login container-fluid" >
-						<h5 className="card-title "> Changez votre mot de passe </h5>	
-						<div className="form-group">
+				</div>
+				<div className ="profile-container">
+					<h4> {user.name} {user.firstName}</h4>
+					<div className="cardForm">
+						<div className="login container-fluid" >
+							<h5 className="card-title "> Changez votre mot de passe </h5>
+							<div className="form-group">
 							<label htmlFor="exampleInputPassword">Nouveau mot de passe</label>
 							<input
-									
 								type="password"
 								className="form-control"
 								name="password"
-								value={uptdatePassword.newPassword}
+								value={updatePassword.newPassword}
 								id="password"	
 								onChange={(e) => setNewPassword(e.target.value)}
 								placeholder="Password"
 							/>
+							</div>
+							<button type="submit" className="btn btn-primary btn-connexion">Validez</button>
 						</div>
-						<button  onClick = {() => uptdatePassword()} type="button" className="btn btn-primary btn-connexion">Validez</button>
-					</form>
+					
 				</div>
+			</div>
+		</form>
 
-				<div class="w-50">
-					<div class="card-body">
-						<h4> {user.firstName}</h4>
-						<h5>{user.name}</h5>
-						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-						<button onClick ={deleteUser} type="button" class="btn btn-outline-danger suppbtn">Supprimez votre compte</button>
-					</div>
-				</div>	
-			</div>	
+		<div class="cardForm">
+			<p class="card-text">Ceci désactivera votre compte.
+			Vous vous apprêtez à lancer la procédure de désactivation de votre compte Groupomania. Votre nom d'affichage, votre @nomdutilisateur et votre profil public ne seront plus visibles sur Groupomania.com
+			</p>
+			<button onClick ={deleteUser} type="button" class="btn btn-outline-danger suppbtn">Supprimez votre compte</button>
 		</div>
+			
 			
       </>
       
@@ -113,6 +156,8 @@ const Profile = () => {
 
 
 export default withRouter(Profile);
+
+
 
 
 

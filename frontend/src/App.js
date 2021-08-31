@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.css';
 import axios from "axios"
 import Login from './pages/login/Login.jsx'
 import SignUp from './pages/signup/SignUp.jsx'
 import Home from './pages/home/Home.jsx'
-// import ProtectedRoute from './Auth/ProtectedRoute';
 import Profile from './pages/profile/Profile.jsx';
 import jwt_decode from "jwt-decode";
 import { UserContext } from "./components/UserContext.jsx";
@@ -27,19 +26,19 @@ const ValidToken = () => {
 
 
 const App = () => {
- 
-  const [isAuth, setIsAuth] = useState(true);
+
   const [user, setUser] = useState({
     id: "",
     firstName:"",
     name: "",
     email: "",
+    imageUrl:"",
   })
 console.log(user)
 
 
   useEffect(() => {
-		if (user.id == "" && ValidToken()) {
+		if (user.id === "" && ValidToken()) {
       axios.get('http://localhost:4200/api/users', {
         headers: {
           'Authorization': localStorage.getItem('token')
@@ -56,8 +55,6 @@ console.log(user)
 	}, [user]);
 
   
-  
- 
    
   return (
       <Router>

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Post, { foreignKey: 'userId' })
     }
   };
 
@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           isEmail: true,
+          async uniqueEmail (email) {
+            if (await User.findOne({ where: { email } }))
+              throw new Error('Ce mail est déjà pris !')
+          }
         }
       },
       password: {
@@ -37,6 +41,13 @@ module.exports = (sequelize, DataTypes) => {
         //   is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z0-9\d@$!%*?&]{8,}$/,
         // }
       },
+      imageUrl: {
+        type : DataTypes.STRING,
+      },
+      admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,

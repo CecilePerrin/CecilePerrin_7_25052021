@@ -1,50 +1,62 @@
 const models = require ('../db/models/index')
 const jwt = require('jsonwebtoken');
 const { Post } = models.sequelize.models
+const fs = require('fs');
+const {Like} = models.sequelize.models
 
 
 //Post
 
-exports.createPost = (req, res, next) =>{
-    const postObject = JSON.parse (req.body.post);
-    if (req.file) {
-        postObject = JSON.parse(req.body.post)
-        postObject.imageUrl = `${req.protocol}://${req.get('host')}/public/${
-          req.file.filename
-        }`
-            .then(post =>{
-            models.Post.create({
-                title: req.body.title,
-                content: req.body.content,
-                file:postObject.imageUrl,
-                userId: req.user.id
-            });
-            post => res.status(201).json(post)
-        })
-      }
 
- 
+exports.createPost = async (req, res, next) => {
+  let postObject = req.body
+  
+  if(!this.content && !this.imgUrl){
+    throw new Error('Vous ne pouvez pas créer de publication vide !')
+  }
+  if (req.file) {
+    postObject.imgUrl = `${req.protocol}://${req.get('host')}/images/${
+      req.file.filename
+    }`
+  }
+
+  try {
+    let post = await Post.create({
+      content: req.body.content,
+      imgUrl:postObject.imgUrl,
+      userId: req.user.id
+    })
+    post = await Post.findOne({ where: { id: post.id }, include: models.User })
+
+    res.status(201).json({ post })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error })
+  }
 }
+
+
+
 exports.modifyPost = (req, res, next) =>{
     const postObject = req.file?
     {
-      ...JSON.parse(req.body.post), //on récupére et on le parse en Objet
-      imageUrl: `${req.protocol}://${req.get('host')}/image/${req.file.filename}` //puis on modifie l'URI
-    } : {...req.body}; //sinon on prend juste le corps de la req
+      ...JSON.parse(req.body.post), 
+      imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : {...req.body};
 
     if (req.file){
-      post.findOne({_id: req.params.id})
+      post.findOne({where:{id: req.params.id}})
       .then( (post) =>{
-        const filename = post.imageUrl.split('/image/')[1];
-        fs.unlink(`image/${filename}`, () =>{
-      Post.update({id: req.params.id}, {...postObject, id: req.params.id}) //on prend l'objet et modifie l'id pour correspondre à l'id des parametres de req.
+        const filename = post.imgUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () =>{
+      Post.update({where:{id: req.params.id}}, {...postObject, id: req.params.id}) 
       .then(() => res.status(200).json ({message:'post modifié'}))
       .catch(error => res.status(400).json({error}));
         });
       });
     } else{
 
-      Post.update({id: req.params.id}, {...postObject, id: req.params.id}) //on prend l'objet et modifie l'id pour correspondre à l'id des parametres de req.
+      Post.update({where:{id: req.params.id}}, {...postObject, id: req.params.id})
       .then(() => res.status(200).json ({message:'post modifié'}))
       .catch(error => res.status(400).json({error}));
     }   
@@ -66,17 +78,23 @@ exports.getOnePost = (req, res, next) =>{
 
 exports.getAllPost = (req, res, next) =>{
  const limit = 10
+ const order = req.query.order;
 
-    Post.findAll({
-        order: ['createdAt', 'DESC'],
-        include:[
-            {
-                model : models.User,
-                require : true,
-            }
-        ],
-        limit
-    })
+
+    const options ={
+      include:[
+        {
+          model : models.User,
+          require : true,
+        }
+      ],
+      limit,
+      order: [order != null ? order.split(':') : ['createdAt', 'DESC']],
+			
+    }
+    Post.findAll(options)
+    .then(posts => res.status(200).json({ posts }))
+    .catch(error => res.status(404).json({ error }))
 }
 
 
@@ -84,7 +102,7 @@ exports.deletepost = (req, res, next) =>{
     if(userId == req.user.id){
         Post.findOne({where :{id: req.params.id}})
           .then( post =>{
-            const filename = post.imageUrl.split('/image/')[1];
+            const filename = post.imageUrl.split('/images/')[1];
             fs.unlink(`image/${filename}`, () =>{
               Post.destroy({where :{id: req.params.id}})
               .then(() => res.status(200).json({message :' Objet supprimé'}))
@@ -98,6 +116,7 @@ exports.deletepost = (req, res, next) =>{
 
 
 //Comments
+
 exports.createComment = (req, res, next) =>{
 
 
@@ -126,6 +145,20 @@ exports.deleteComment= (req, res, next) =>{
 
 
 //Likes
-exports.likeOnePost= (req, res, next) =>{
 
+exports.likeOnePost = async(req, res, next)=>{
+  const userId = req.user.id;
+
+  const likeUser = await Like.findOne({where :{userId}, postId: req.params.id})
+    .then(() => res.status(200).json({message :'utilisateur et post trouvé'}))
+    .catch(error => res.status(400).json({'erreur': 'utilisateur ou post demandés nexistent pas'}));
+    
+  if (likeUser){
+    Like.destroy()
+    .then(()=>{res.status(200).json({like:-1})})
+  } else if (!likeUser){
+    Like.create({where :{userId, postId: req.params.id}})
+    .then(()=>{res.status(200).json({like:+1})})
+  }
 }
+

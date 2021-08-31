@@ -1,9 +1,9 @@
-import React, { useContext, useState, useRef } from "react";
-import { UserContext } from "../../components/UserContext.jsx";
+import React from "react";
+
 import Nav from '../../components/Nav'
 import PictureProfile from "../../assets/helsdraw.png"
 import userBanner from "../../assets/bannière4.png"
-import Userpost from "../../components/Userpost"
+
 
 
 const UserWall = () =>{

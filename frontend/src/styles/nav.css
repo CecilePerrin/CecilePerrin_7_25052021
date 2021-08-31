@@ -24,25 +24,18 @@
   flex: 5;
 }
 
-.searchbar {
-  width: 100%;
-  height: 30px;
-  background-color: white;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-}
-
-.searchIcon {
-  font-size: 20px !important;
-  margin-left: 10px;
-}
-
-.searchInput {
+.btn-search{
+  background-color: #D14662;
+  color:white;
+  border-color:#D14662;
   border: none;
-  width: 70%;
+  display: inline block;
 }
 
+.btn-search:hover{
+  background-color: #e698a8;
+  border-color:#e698a8;
+}
 .searchInput:focus {
   outline: none;
 }

@@ -6,64 +6,88 @@ import {
 import { useContext, useRef, useState } from "react";
 import { UserContext } from "./UserContext.jsx";
 import axios from "axios";
-import PictureProfile from "../assets/helsdraw.png"
+import noavatar from "../assets/noavatar.JPG"
+
 
 const CreatePost = () =>  {
   const { user } = useContext(UserContext);
-  
-  const description = useRef();
+ 
+  const content = useRef();
   const [file, setFile] = useState(null);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
-    //post axios
+    const newPost = {
+      userId: user.id,
+      content: content.current.value,
+      imgUrl: file
+    };
+   
+      const formData = new FormData();
+      formData.append('userId', newPost.userId);
+      formData.append('content', newPost.content);
+      formData.append('imgUrl', newPost.imgUrl, newPost.imgUrl.name);
+      console.log( newPost.imgUrl.name);
+      try {
+        await axios.post("http://localhost:4200/api/posts", formData, {
+          headers:{"Content-Type": "multipart/form-data",
+          Authorization: localStorage.getItem('token')
+        }
+        });
+      } catch (err) {}
+   
   };
 
   return (
     <div className="share">
       <div className="shareWrapper">
-        <div className="shareTop">
-          <img
-            className="shareProfileImg"
-            src={
-                PictureProfile
-            }
-            alt=""
-          />
-          <input
-            placeholder={"Quoi de neuf " + user.firstName + "?"}
+          <div className="shareTop">
+            <img
+                className="shareProfileImg"
+                src={
+                user.imageUrl
+                ? user.imageUrl
+                :  noavatar
+                }
+                alt=""
+                />
+            <input
+            placeholder={"Quoi de neuf " + user.name + "?"}
             className="shareInput"
-            ref={description}
-          />
-        </div>
-        <hr className="shareHr" />
-        {file && (
+            ref={content}
+            />
+          </div>
+          <hr className="shareHr" />
+          {file && (
           <div className="shareImgContainer">
             <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
-            <Cancel className="shareCancelImg" onClick={() => setFile(null)} />
+            <Cancel className="shareCancelImg" onClick={() =>
+            setFile(null)} />
           </div>
-        )}
-        <form className="shareBottom" onSubmit={submitHandler}>
-          <div className="shareOptions">
-            <label htmlFor="file" className="shareOption">
-              <PermMedia htmlColor="indianRed" className="shareIcon" />
-              <span className="shareOptionText">Photo ou Vidéo</span>
-              <input
-                style={{ display: "none" }}
-                type="file"
-                id="file"
-                accept=".png,.jpeg,.jpg"
-                onChange={(e) => setFile(e.target.files[0])}
-              />
-            </label>
-          </div>
-          <button className="shareButton" type="submit">
-            Envoyer
-          </button>
-        </form>
+          )}
+          <form className="shareBottom" onSubmit={submitHandler}>
+            <div className="shareOptions">
+                <label htmlFor="file" className="shareOption">
+                  <PermMedia htmlColor="tomato" className="shareIcon" />
+                  <span className="shareOptionText">Photo or Video</span>
+                  <input
+                  style={{ display: "none" }}
+                  type="file"
+                  id="file"
+                  accept=".png,.jpeg,.jpg"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </label>
+            </div>
+            <button className="shareButton" type="submit">
+            Share
+            </button>
+          </form>
       </div>
     </div>
   );
-}
-export default CreatePost;
+  }
+  export default CreatePost;
+
+  
+            

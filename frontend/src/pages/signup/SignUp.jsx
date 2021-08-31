@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from 'react-hook-form';
 import Banner from '../../components/Banner.jsx'
 import axios from 'axios'
 import "../../styles/login.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
-// import Warning from "./Warning";
+import Warning from "../../components/Warning";
 
 
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -29,20 +29,13 @@ const schema = yup.object().shape({
 		.min(8, "votre mot de passe doit faire plus de 8 caractères")
 	});
 
-// const schema = yup.object().shape({
-//     firstName: yup.string().required('Veuillez entrer votre Nom'),
-//     email: yup.string().required('Veuillez entrer votre email').email(),
-//     name: yup.string().required('Veuillez entrer votre Prénom'),
-//     password: yup.string().required('veuillez renseigner un mot de passe').min(8)
-// });
-
 
 const SignUp = () => {
 
     const { register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(schema)
     });
-   
+   const [redirect, setRedirect] = useState(false);
 
         
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
@@ -52,8 +45,9 @@ const SignUp = () => {
         axios.post('http://localhost:4200/api/users/signup',data,{ headers: { Authorization:localStorage.getItem('token') } })
         .then(response=> 
             localStorage.setItem("token", response.data.token))
-            // console.log(response)
-        .catch(error => console.log(error));
+            setRedirect(true)
+        .catch(error => 
+            Warning("danger", error.response.data.error));
 };
 
     return (
@@ -130,6 +124,7 @@ const SignUp = () => {
                         </form>
                         
             </div>
+            {redirect && <Redirect to ="/"/>}
 			
 </>
     );

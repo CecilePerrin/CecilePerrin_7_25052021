@@ -7,7 +7,7 @@ import Banner from '../../components/Banner.jsx'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
 import { UserContext } from "../../components/UserContext.jsx";
-// import Warning from "./Warning";
+
 
 	const schema = yup.object().shape({
 		email: yup.string().required('Veuillez entrer votre email').email(), 
@@ -22,6 +22,7 @@ import { UserContext } from "../../components/UserContext.jsx";
 	const { setUser, alert} = useContext(UserContext);	
 
 	const [redirect, setRedirect] = useState(false);
+	const [error, setError] = useState({errorMessage:""})
 	
 
     const loginUser = data =>{
@@ -34,9 +35,11 @@ import { UserContext } from "../../components/UserContext.jsx";
 			console.log("vous êtes connecté")
 			console.log(response.data.user)
 		})    
-        .catch(error => console.log(error));
+        .catch(err => 
+            setError({ errorMessage:err.response.data.error}))
+			console.log(error)
 };
-
+console.log(error)
 
 	return (
 		<>
@@ -82,7 +85,14 @@ import { UserContext } from "../../components/UserContext.jsx";
 						Se connecter
 					</button>
 				</form>
-				{redirect && <Redirect to="/myprofile" />}
+					{error ?(
+						<>
+							<div class="alert alert-warning alert-dismissible " role="alert">
+							<span className="error">{error.errorMessage}</span>
+							</div>
+						</>
+					):null}
+					{redirect && <Redirect to="/myprofile" />}
 				</div>
 				
 				

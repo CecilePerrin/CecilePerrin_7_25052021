@@ -27,7 +27,7 @@ schema
 exports.signup = (req, res, next) =>{
 
   if (!schema.validate(req.body.password)){
-    return res.status(400).json({error:"mot de passe invalide"})
+     res.status(400).json({error:"mot de passe invalide"})
     } else if (schema.validate(req.body.password)){
       bcrypt.hash(req.body.password,10)
           .then(hash =>{
@@ -54,8 +54,8 @@ exports.login = (req, res, next) =>{
             if(!user){
                 return res.status(401).json({error: "utilisateur non trouvé"})
             }
-            bcrypt.compare(req.body.password, user.password) // on compare le mdp envoyé par l'utilisateur avec celui qui est enregistré.
-            .then(valid =>{ //ici on reçoit un boolean et donc si on reçoit false : mdp invalide
+            bcrypt.compare(req.body.password, user.password) 
+            .then(valid =>{ 
                 if (!valid){
                     return res.status(401).json({error:'mot de passe incorrect'})
                 }
@@ -73,14 +73,14 @@ exports.login = (req, res, next) =>{
 exports.getOneUser = async (req, res, next) =>{
   try {
     		const user = await models.User.findOne({
-    			attributes: ["id", "firstName","name", "email"],
+    			attributes: ["id", "firstName","name", "email", "imageUrl"],
     			where: {
     				id: req.user.id
     			}
     		});
     
     		if (!user) {
-    			throw new Error("Sorry,can't find your account");
+    			throw new Error("désolé nous ne trouvons pas votre compte");
     		}
     		res.status(200).json({ user });
     	} catch (error) {
@@ -88,17 +88,31 @@ exports.getOneUser = async (req, res, next) =>{
     	}
 }
 
+  exports.updateProfile = async (req, res ) =>{
 
-  exports.updateProfile = async (req, res, next) =>{   
-       models.User.update(
-         {password: await bcrypt.hash(req.body.password,10)}, 
-         {where: {id: req.user.id}}
-        )
-      .then(()=> res.send("success"))
-      
-      .catch(error => res.status(400).json({error}));
-        
-  };
+    let userObject = req.body
+
+    if (req.file) {
+      userObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${
+        req.file.filename
+      }`
+    }
+    const password =  await bcrypt.hash(req.body.password,10)
+    const options = {where:{id : req.user.id}};
+    const imageUrl = userObject.imageUrl;
+    const password = await bcrypt.hash(req.body.password,10)
+    const values = {imageUrl, password}
+    
+  
+    try {
+       await models.User.update( values, options)
+      res.status(201).json({message:'utilisateur modifié' })
+    } catch (error) {
+      console.log(error)
+      res.status(400).json({ error })
+    } 
+  }
+
 
 
 
@@ -118,4 +132,10 @@ exports.deleteProfile =  (req, res, next) =>{
   });
 }
 
+// exports.getAllUsers = (req, res, next) =>{
+//   models.User.findAll({
+//     where:{
 
+//     }
+//   })
+// }

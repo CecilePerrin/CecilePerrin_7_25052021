@@ -2,7 +2,10 @@ import React, {useState} from "react";
 import "../styles/warning.css";
 import { Alert } from 'react-bootstrap';
 
-const Warning = () => {
+
+
+
+const Warning = (satus, errorMessage) => {
 	const [show, setShow] = useState(true);
 
 	if (show) {
@@ -10,7 +13,7 @@ const Warning = () => {
 		  <Alert variant="danger" onClose={() => setShow(false)} dismissible>
 			<Alert.Heading>Oh snap! You got an error!</Alert.Heading>
 			<p>
-			  Please got check if your mail or password are the good one and retry to connect.
+			 {satus, errorMessage}.
 			</p>
 		  </Alert>
 		);
