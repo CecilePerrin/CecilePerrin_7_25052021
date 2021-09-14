@@ -37,12 +37,15 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        // validate: {
-        //   is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z0-9\d@$!%*?&]{8,}$/,
-        // }
+        validate: {
+          is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z0-9\d@$!%*?&]{8,}$/,
+          notEmpty: true,
+          notNull: true, 
+        }
       },
       imageUrl: {
         type : DataTypes.STRING,
+        defaultValue: false
       },
       admin: {
         type: DataTypes.BOOLEAN,

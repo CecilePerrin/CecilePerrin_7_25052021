@@ -3,11 +3,12 @@ import '../../styles/post.css'
 import Nav from '../../components/Nav.jsx'
 import CreatePost from '../../components/CreatePost.jsx';
 import UserPost from "../../components/Userpost.jsx";
-// import { Link } from "react-router-dom";
 import axios from "axios";
+import '../home/home.css'
 
 
 const Home = () => {
+
     const [posts, setPosts] = useState(null);
 	
 	useEffect(() => {
@@ -23,14 +24,15 @@ const Home = () => {
 			handlePosts();
 		}
 		
-	}, [posts]);
+	}, [setPosts]);
+
 	
 	console.log(posts)
 	    
     return (
         <>
             <Nav /> 
-            <div className = "container-sm">
+            <div className = "container-sm ">
             <CreatePost />
 				<div className=''>
 							{posts && (
@@ -45,6 +47,7 @@ const Home = () => {
 							)}
 				</div>	
             </div>
+			
           </>
     )
 };

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { Post } = models.sequelize.models
 const fs = require('fs');
 const {Like} = models.sequelize.models
+const {Comment} = models.sequelize.models
 
 
 //Post
@@ -11,9 +12,6 @@ const {Like} = models.sequelize.models
 exports.createPost = async (req, res, next) => {
   let postObject = req.body
   
-  if(!this.content && !this.imgUrl){
-    throw new Error('Vous ne pouvez pas créer de publication vide !')
-  }
   if (req.file) {
     postObject.imgUrl = `${req.protocol}://${req.get('host')}/images/${
       req.file.filename
@@ -24,7 +22,7 @@ exports.createPost = async (req, res, next) => {
     let post = await Post.create({
       content: req.body.content,
       imgUrl:postObject.imgUrl,
-      userId: req.user.id
+      userId: req.user.id,
     })
     post = await Post.findOne({ where: { id: post.id }, include: models.User })
 
@@ -78,87 +76,163 @@ exports.getOnePost = (req, res, next) =>{
 
 exports.getAllPost = (req, res, next) =>{
  const limit = 10
- const order = req.query.order;
-
-
     const options ={
       include:[
         {
           model : models.User,
           require : true,
-        }
+        },
+        {
+          model : models.Comment,
+          require : false,
+        },
+        {
+          model : models.Like,
+          require : false,
+        },
+        
       ],
+      group:'post.id',
       limit,
-      order: [order != null ? order.split(':') : ['createdAt', 'DESC']],
+      order:  [['createdAt', 'DESC']],
 			
     }
     Post.findAll(options)
     .then(posts => res.status(200).json({ posts }))
     .catch(error => res.status(404).json({ error }))
+   
 }
 
 
 exports.deletepost = (req, res, next) =>{
-    if(userId == req.user.id){
-        Post.findOne({where :{id: req.params.id}})
-          .then( post =>{
-            const filename = post.imageUrl.split('/images/')[1];
-            fs.unlink(`image/${filename}`, () =>{
-              Post.destroy({where :{id: req.params.id}})
-              .then(() => res.status(200).json({message :' Objet supprimé'}))
-              .catch(error => res.status(400).json({error}));
-            });
-          })
-          .catch(error => res.status(500).json({error}))
-
-    }
+   Post.findOne({where :{id: req.params.id}})
+    .then( post =>{
+      const filename = post.imgUrl.split('/images/')[1];
+      fs.unlink(`images/${filename}`, () =>{
+        Post.destroy({where :{id: req.params.id}})
+        .then(() => res.status(200).json({message :' Objet supprimé'}))
+        .catch(error => res.status(400).json({error}));
+      });
+    })
+    .catch(error => res.status(500).json({error})) 
 };
+
+//LIKE 
+
+exports.likeOnePost = async(req, res, next)=>{
+  try {
+    const existingLike = await Like.findOne({
+      where: { userId: req.user.id, postId: req.params.postId }
+    })
+
+    if (existingLike) {
+      await existingLike.destroy()
+      res.status(200).json({ like: false })
+    } else {
+      await Like.create({ userId: req.user.id, postId: req.params.postId })
+      res.status(201).json({ like: true })
+    }
+  } catch (error) {
+    res.status(400).json({ error })
+  }
+}
+
+exports.getAllLikes = async (req, res, next) =>{
+  await Like.findAll({
+    where: { postId: req.params.postId },
+    include: models.User})
+    .then(likes => res.status(200).json({ likes }))
+    .catch(error => res.status(404).json({ error }))
+}
 
 
 //Comments
 
-exports.createComment = (req, res, next) =>{
+exports.createComment = async (req, res, next) =>{
+  if (req.body.content) {
+    try {
+      let comment = await Comment.create({
+        content: req.body.content,
+        userId: req.body.userId,
+        postId: req.params.postId
+      })
+      comment = await Comment.findOne({ where: { id: comment.id }, include: models.User })
+  
+      res.status(201).json({ comment })
+    } catch (error) {
+      console.log(error)
+      res.status(400).json({ error })
+    } 
+  }
 
-
-}
-
-
-exports.getOneComment= (req, res, next) =>{
 
 }
 
 
 exports.getAllComments= (req, res, next) =>{
-
-
-}
-
-
-exports.modifyComment= (req, res, next) =>{
-
-}
-
-
-exports.deleteComment= (req, res, next) =>{
-
-}
-
-
-//Likes
-
-exports.likeOnePost = async(req, res, next)=>{
-  const userId = req.user.id;
-
-  const likeUser = await Like.findOne({where :{userId}, postId: req.params.id})
-    .then(() => res.status(200).json({message :'utilisateur et post trouvé'}))
-    .catch(error => res.status(400).json({'erreur': 'utilisateur ou post demandés nexistent pas'}));
+  const limit = 10
+  const options ={
+    where:{ postId:req.params.postId},
+    include:[
+      {
+        model : models.User,
+        require : true,
+      },
+     
+    ],
+    limit,
+    order:  [['createdAt', 'DESC']],
     
-  if (likeUser){
-    Like.destroy()
-    .then(()=>{res.status(200).json({like:-1})})
-  } else if (!likeUser){
-    Like.create({where :{userId, postId: req.params.id}})
-    .then(()=>{res.status(200).json({like:+1})})
+  }
+  Comment.findAll(options)
+  .then(comments => res.status(200).json({ comments }))
+  .catch(error => res.status(404).json({ error }))
+
+}
+
+
+exports.modifyComment= async (req, res, next) =>{
+  try {
+    const comment = await Comment.findOne({
+      where: {
+        id: req.params.id, userId: req.user.id
+      },
+      include: models.User
+    });
+
+    if (!comment) {
+      throw new Error("désolé vous ne pouvez pas modifier ce commentaire");
+    } else{
+      comment.update(req.body)
+      .then(comment=> res.status(200).json({comment}))
+    }   
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+  
+  }
+
+
+exports.deleteComment= async (req, res, next) =>{
+  try {
+    const comment = await Comment.findOne({
+      where: {
+        id: req.params.id, userId: req.user.id
+      },
+      include: models.User
+    });
+
+    if (!comment) {
+      throw new Error("désolé vous ne pouvez pas supprimer ce commentaire");
+    } else{
+      comment.destroy()
+      .then(() => res.status(200).json({emssage:'commentaire supprimé'}))
+    }   
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 }
+
+
+
 

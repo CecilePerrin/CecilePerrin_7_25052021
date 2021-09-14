@@ -10,8 +10,8 @@ import noavatar from "../assets/noavatar.JPG"
 
 
 const CreatePost = () =>  {
+
   const { user } = useContext(UserContext);
- 
   const content = useRef();
   const [file, setFile] = useState(null);
 
@@ -20,41 +20,48 @@ const CreatePost = () =>  {
     const newPost = {
       userId: user.id,
       content: content.current.value,
-      imgUrl: file
+      imageUrl: file
     };
-   
+
+    if (content.current.value === "" || file === null ){
+     alert("Vous ne pouvez pas envoyer un post vide")
+    }else{
       const formData = new FormData();
       formData.append('userId', newPost.userId);
       formData.append('content', newPost.content);
-      formData.append('imgUrl', newPost.imgUrl, newPost.imgUrl.name);
-      console.log( newPost.imgUrl.name);
+      formData.append('imageUrl', newPost.imageUrl, newPost.imageUrl.name);
+      console.log( newPost.imageUrl.name);
       try {
         await axios.post("http://localhost:4200/api/posts", formData, {
           headers:{"Content-Type": "multipart/form-data",
           Authorization: localStorage.getItem('token')
         }
         });
+        window.location.reload();
       } catch (err) {}
    
-  };
+    };
+  }
+   
 
   return (
+
     <div className="share">
       <div className="shareWrapper">
           <div className="shareTop">
             <img
-                className="shareProfileImg"
-                src={
-                user.imageUrl
-                ? user.imageUrl
-                :  noavatar
-                }
-                alt=""
-                />
+              className="shareProfileImg"
+              src={
+                user.imageUrl == "0"
+                ? noavatar
+                :  user.imageUrl
+              }
+              alt="Image user"
+              />
             <input
-            placeholder={"Quoi de neuf " + user.name + "?"}
-            className="shareInput"
-            ref={content}
+              placeholder={"Quoi de neuf " + user.name + "?"}
+              className="shareInput"
+              ref={content}
             />
           </div>
           <hr className="shareHr" />
@@ -86,7 +93,7 @@ const CreatePost = () =>  {
       </div>
     </div>
   );
-  }
+}
   export default CreatePost;
 
   

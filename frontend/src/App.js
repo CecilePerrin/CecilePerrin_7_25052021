@@ -26,7 +26,7 @@ const ValidToken = () => {
 
 
 const App = () => {
-
+  
   const [user, setUser] = useState({
     id: "",
     firstName:"",
@@ -64,7 +64,7 @@ console.log(user)
                 <Route exact path="/SignUp" component = {SignUp}/>
                 <Route exact path="/Home" component = {Home}/>
                 <Route exact path= "/myprofile" component={Profile} />
-                <Route exact path="/UserWall" component ={UserWall} />
+                <Route exact path="/UserWall/:name" component ={UserWall} />
             </UserContext.Provider>
           </div>
       </Router>
@@ -72,3 +72,4 @@ console.log(user)
 }
 
 export default App;
+

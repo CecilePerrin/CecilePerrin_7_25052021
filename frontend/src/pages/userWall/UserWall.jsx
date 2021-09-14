@@ -1,7 +1,7 @@
 import React from "react";
 
 import Nav from '../../components/Nav'
-import PictureProfile from "../../assets/helsdraw.png"
+
 import userBanner from "../../assets/bannière4.png"
 
 
@@ -11,27 +11,24 @@ const UserWall = () =>{
         <>
             <Nav />
             <div className="profileRight">
-			<div className="profileRightTop">
-				<div className="profileCover">
-					<img
+				<div className="profileRightTop">
+					<div className="profileCover">
+						<img
 							className="profileCoverImg"
 							src={userBanner}
 							alt=""
-					/>
-					<div className = "hover"></div>
+						/>
+						<div className = "hover"></div>
 						<img
 							className="profileUserImg"
-							src={PictureProfile}
+							// src={PictureProfile}
 							alt=""
 							/>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div className ="profile-container">	
-			
-			
-		</div>
-			
+			<div className ="profile-container">		
+			</div>
         </>
     )
 }

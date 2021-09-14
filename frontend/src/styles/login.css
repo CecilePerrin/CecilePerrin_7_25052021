@@ -114,3 +114,7 @@ hr.divider::after{
   font-weight: bold;
   color:#76777A;
 }
+
+.alert{
+  margin-top: 1rem;
+}

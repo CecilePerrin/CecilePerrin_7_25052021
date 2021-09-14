@@ -9,42 +9,41 @@ import * as yup from "yup"
 import { UserContext } from "../../components/UserContext.jsx";
 
 
-	const schema = yup.object().shape({
-		email: yup.string().required('Veuillez entrer votre email').email(), 
-		password: yup.string().required('veuillez renseigner un mot de passe').min(8)
-	});
+const schema = yup.object().shape({
+	email: yup.string().required('Veuillez entrer votre email').email(), 
+	password: yup.string().required('veuillez renseigner un mot de passe').min(8)
+});
 	
 	
-	const Login = () => {
-		const { register, handleSubmit, formState:{errors}} = useForm({
-			resolver: yupResolver(schema)
-    	});
-	const { setUser, alert} = useContext(UserContext);	
+const Login = () => {
 
+	const { register, handleSubmit, formState:{errors}} = useForm({
+			resolver: yupResolver(schema)
+	});
+
+	const { setUser, alert} = useContext(UserContext);	
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState({errorMessage:""})
 	
+	
 
     const loginUser = data =>{
-
         axios.post('http://localhost:4200/api/users/login',data,{ headers: { Authorization:localStorage.getItem('token') } })
         .then(response=> {
 			setUser(response.data.user);
 			localStorage.setItem('token', response.data.token)
 			setRedirect(true)
 			console.log("vous êtes connecté")
-			console.log(response.data.user)
 		})    
         .catch(err => 
             setError({ errorMessage:err.response.data.error}))
 			console.log(error)
-};
-console.log(error)
+	};
+
 
 	return (
 		<>
-		<Banner/>
-		
+			<Banner/>
 			<div className="header">
 				<div className="containerLink">
 								<p className="textLink">Vous n'avez pas de compte?</p>
@@ -55,7 +54,7 @@ console.log(error)
 			</div>
 			<div className="container row">
 				<form onSubmit= {handleSubmit(loginUser)}  className="login container-fluid" >
-				<h2 className="title-form" >Se connecter</h2>
+					<h2 className="title-form" >Se connecter</h2>
 					<div className="form-group">
 						<label htmlFor="email" className="form-label">Email</label>
 							<input
@@ -65,37 +64,36 @@ console.log(error)
 								aria-describedby="emailHelp"
 								{...register("email", { pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
 								placeholder="robert.87@gmail.com"
-								autoFocus/>
+								autoFocus
+							/>
 						<p style= {{color:"red"}} >{errors.email?.message}</p>
 					</div>
 					<div className="form-group">
-									<label htmlFor="exampleInputPassword">Mot de passe</label>
-									<input
-										type="password"
-										className="form-control input-login "
-										name="password"
-										{...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
-										placeholder="Mot de passe"
-										autoFocus
-									/>
-									<p style= {{color:"red"}} >{errors.password?.message}</p>
+						<label htmlFor="exampleInputPassword">Mot de passe</label>
+						<input
+							type="password"
+							className="form-control input-login "
+							name="password"
+							{...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
+							placeholder="Mot de passe"
+							autoFocus
+						/>
+						<p style= {{color:"red"}} >{errors.password?.message}</p>
 					</div>
 					<h2 id="emailHelp" className="form-text" aria-hidden="true"></h2>
 					<button type="submit" className="btn btn-primary btn-connexion">
 						Se connecter
 					</button>
-				</form>
-					{error ?(
-						<>
-							<div class="alert alert-warning alert-dismissible " role="alert">
-							<span className="error">{error.errorMessage}</span>
-							</div>
-						</>
+					{error.errorMessage !== ""?(	
+						<div class="alert alert-warning alert-dismissible " role="alert">
+							{error.errorMessage}
+						</div>
+						
 					):null}
-					{redirect && <Redirect to="/myprofile" />}
-				</div>
-				
-				
+					{redirect && <Redirect to="/home" />}
+				</form>
+			</div>
+						
 		</>
 	);
 };

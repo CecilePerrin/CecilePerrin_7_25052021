@@ -97,22 +97,55 @@ exports.getOneUser = async (req, res, next) =>{
         req.file.filename
       }`
     }
-    const password =  await bcrypt.hash(req.body.password,10)
     const options = {where:{id : req.user.id}};
     const imageUrl = userObject.imageUrl;
-    const password = await bcrypt.hash(req.body.password,10)
-    const values = {imageUrl, password}
+    const values = {imageUrl}
     
-  
-    try {
-       await models.User.update( values, options)
-      res.status(201).json({message:'utilisateur modifié' })
-    } catch (error) {
-      console.log(error)
-      res.status(400).json({ error })
-    } 
+       try {
+          await models.User.update( values, options)
+          if(req.fil)
+         res.status(201).json({message:'Votre image de profile est modifiée' })
+       } catch (error) {
+         console.log(error)
+         res.status(400).json({ error })
+       } 
+
+     
   }
 
+
+  exports.updatePassword = async (req, res) =>{ 
+    await User.findOne({ where: { email: req.body.email } })
+      .then(user => {
+        if(!user){
+            return res.status(401).json({error: "utilisateur non trouvé"})
+        }
+        bcrypt.compare(req.body.password, user.password) 
+          .then(valid =>{ 
+            if (!valid){
+                return res.status(401).json({error:'mot de passe incorrect'})
+            }
+            if (!schema.validate(req.body.password)){
+              res.status(400).json({error:"mot de passe invalide"})
+             }else if(schema.validate(req.body.password)){
+        
+              const salt =  bcrypt.genSalt(10);
+              const password = bcrypt.hash(req.body.password, salt);
+              const values = { password}
+              const options = {where:{id : req.user.id}}; 
+        
+                try {
+                   models.User.update( values, options)
+                  res.status(201).json({message:'Mot de passe modifié!' })
+                  } catch (error) {
+                  console.log(error)
+                  res.status(400).json({ error })
+                  }
+            }      
+        })
+        .catch(error => res.status(500).json({error}))
+      }) 
+}
 
 
 
@@ -132,10 +165,3 @@ exports.deleteProfile =  (req, res, next) =>{
   });
 }
 
-// exports.getAllUsers = (req, res, next) =>{
-//   models.User.findAll({
-//     where:{
-
-//     }
-//   })
-// }
