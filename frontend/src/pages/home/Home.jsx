@@ -33,7 +33,7 @@ const Home = () => {
         <>
             <Nav /> 
             <div className = "container-sm ">
-            <CreatePost />
+            	<CreatePost />
 				<div className=''>
 							{posts && (
 								<>

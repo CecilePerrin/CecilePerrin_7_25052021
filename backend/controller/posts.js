@@ -36,29 +36,61 @@ exports.createPost = async (req, res, next) => {
 
 
 exports.modifyPost = (req, res, next) =>{
-    const postObject = req.file?
-    {
-      ...JSON.parse(req.body.post), 
-      imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body};
-
-    if (req.file){
-      post.findOne({where:{id: req.params.id}})
+  const content = req.body.content
+  const options = {where:{id : req.params.id}};
+  const values = {content}
+  
+  if (req.file){
+      const imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+      console.log(imgUrl)
+      const values = {content, imgUrl}
+      Post.findOne(options)
       .then( (post) =>{
         const filename = post.imgUrl.split('/images/')[1];
+        console.log(values)
         fs.unlink(`images/${filename}`, () =>{
-      Post.update({where:{id: req.params.id}}, {...postObject, id: req.params.id}) 
+      Post.update(values, options) 
       .then(() => res.status(200).json ({message:'post modifié'}))
       .catch(error => res.status(400).json({error}));
         });
       });
     } else{
-
-      Post.update({where:{id: req.params.id}}, {...postObject, id: req.params.id})
+      Post.update( values, options)
       .then(() => res.status(200).json ({message:'post modifié'}))
       .catch(error => res.status(400).json({error}));
     }   
 }
+
+
+// exports.modifyPost=(req, res)=>{
+//   const postObject = req.body
+
+//   if (req.file) {
+//     postObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${
+//       req.file.filename
+//     }`
+//   }
+//   const options = {where:{id : req.post.id}};
+//   const imageUrl = postObject.imageUrl;
+//   const values = {imageUrl}
+  
+//      try {
+//         await Post.update( values, options)
+//         if(req.fil){
+//           Post.findOne({where:{id: req.params.id}})
+//           .then( (post) =>{
+//             const filename = post.imgUrl.split('/images/')[1];
+//             fs.unlink(`images/${filename}`
+//         }
+//        res.status(201).json({message:'Votre publication est modifiée' })
+//      } catch (error) {
+//        console.log(error)
+//        res.status(400).json({ error })
+//      } 
+
+   
+// }
+// }
 
 exports.getOnePost = (req, res, next) =>{
     Post.findOne({

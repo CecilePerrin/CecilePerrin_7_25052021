@@ -1,5 +1,5 @@
 
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
@@ -12,19 +12,25 @@ const ModifyPost =
 ({post, 
   handleShowModify, 
   content,
-  date
+  date,
 }) => {
   const [newFile, setNewFile] = useState(null)
   const {user} = useContext(UserContext);
 
-   const handleUpdate = async (e, id) => {
+ 
+
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
+    console.log(post)
     const modifyPost = {
       userId: user.id,
       content: content.current.value,
       imageUrl: newFile
     };
-
+    
+    const id = post.id
+    
     const formData = new FormData();
     formData.append('userId', modifyPost.userId);
     formData.append('content', modifyPost.content);
@@ -38,11 +44,9 @@ const ModifyPost =
       });
       // setDisplayModify(false)
     } catch (err) {}
-  
-   
   }
-  console.log(URL.createObjectURL(newFile))
  
+
 return (
   <div className ="cover">
     <div className="post modifyPost">
@@ -73,34 +77,46 @@ return (
             className="postText"
             ref={content}
           /> 
-          
-              <div className="shareImgContainer">
-                <img className="shareImg" 
-                src={
-                  newFile?
-                  URL.createObjectURL(newFile)
-                 :post.imgUrl}
-                alt=""
-                />
-                <Cancel 
-                    className="shareCancelImg" 
-                    onClick={() =>setNewFile(null)} 
-                />
-              </div>
-        
-        
+          <div className="shareImgContainer">
+                          <img className="shareImg" 
+                          src={
+                            newFile?
+                            URL.createObjectURL(newFile)
+                          :post.imgUrl}
+                          alt=""
+                          />
+                          <Cancel 
+                              className="shareCancelImg" 
+                              onClick={() =>setNewFile(null)} 
+                          />
+          </div>
+
+          {/* {newFile.imageUrl ? (
+                    <div className="shareImgContainer">
+                      <img className="shareImg" src={URL.createObjectURL(newFile.imageUrl)} alt="" />
+                      <Cancel className="shareCancelImg" onClick={() =>
+                      setNewFile(null)} />
+                    </div> 
+                    ):
+                    <div className="shareImgContainer">
+                      <img className="shareImg" src={post.imgUrl} alt="" />
+                      <Cancel className="shareCancelImg" onClick={() =>
+                      setNewFile(null)} />
+                    </div>
+                  } */}
+                      
         </div>
-        <form className="shareBottom" onSubmit={handleUpdate}>
+        <form className="shareBottom" onSubmit={(id)=>handleUpdate(id)}>
             <div className="">
-                <label htmlFor="file" className="shareOption">
+                <label htmlFor="modifyFile" className="shareOption">
                   <PermMedia style ={{color : "#D14662"}} className="shareIcon" />
                   <span className="shareOptionText">Photo or Video</span>
                   <input
                     style={{ display: "none" }}
                     type="file"
-                    id="newFile"
+                    id="modifyFile"
                     accept=".png,.jpeg,.jpg"
-                    onChange={(e) => setNewFile(e.target.files[0])}
+                    onChange={(e) =>  setNewFile(e.target.files[0])}
                   />
                 </label>
             </div>
@@ -116,3 +132,18 @@ return (
 }
 
 export default ModifyPost;
+
+{/* <div className="shareImgContainer">
+                <img className="shareImg" 
+                src={
+                  newFile?
+                  URL.createObjectURL(newFile)
+                 :post.imgUrl}
+                alt=""
+                />
+                <Cancel 
+                    className="shareCancelImg" 
+                    onClick={() =>setNewFile(null)} 
+                />
+              </div> */}
+        
