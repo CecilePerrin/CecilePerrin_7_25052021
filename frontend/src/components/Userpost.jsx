@@ -1,6 +1,6 @@
 
 import { MoreVert } from "@material-ui/icons";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
@@ -9,6 +9,7 @@ import "../styles/userPost.css"
 import Likes from "./Likes";
 import Comment from "./Comment";
 import CommentList from "./CommentList"
+import ModifyPost from "./modifyPost";
 
 const UserPost = ({post}) => {
 
@@ -18,7 +19,39 @@ const UserPost = ({post}) => {
   const [comments, setComments] = useState(null);
   const [displayComponent, setDisplayComponent] = useState(false)
   const [inputReset, setInputReset] = useState(0)
+  const [displayModify, setDisplayModify] = useState(false)
+
+
+
+  const content = useRef();
+  // const [newFile, setNewFile] = useState(null)
+
+  // const handleUpdate = async (e, id) => {
+  //   e.preventDefault();
+  //   const modifyPost = {
+  //     userId: user.id,
+  //     content: content.current.value,
+  //     imageUrl: newFile
+  //   };
+
+  //   const formData = new FormData();
+  //   formData.append('userId', modifyPost.userId);
+  //   formData.append('content', modifyPost.content);
+  //   formData.append('imageUrl', modifyPost.imageUrl, modifyPost.imageUrl.name);
+  //   console.log( modifyPost.imageUrl.name);
+  //   try {
+  //     await axios.put(`http://localhost:4200/api/posts/${id}`, formData, {
+  //       headers:{"Content-Type": "multipart/form-data",
+  //       Authorization: localStorage.getItem('token')
+  //     }     
+  //     });
+  //     setDisplayModify(false)
+  //   } catch (err) {}
   
+   
+  // }
+
+
 
   const handleDeletePost = async (id) => {
 		const answer = window.confirm("êtes vous sûr?");
@@ -50,11 +83,16 @@ const UserPost = ({post}) => {
 		}
 	}, [setComments]);
  
-  const handleShowComment = () =>{
+  const handleShowComponent = () =>{
       setDisplayComponent(!displayComponent)
     
   }
+
+  const handleShowModify = () =>{
+    setDisplayModify(!displayModify)
+  }
     
+
   return (
       <div className="post">
         <div className="postWrapper">
@@ -75,10 +113,20 @@ const UserPost = ({post}) => {
               </div>
               <div className="postTopRight">
                   {user.id === post.User.id ? (
-                  <MoreVert 
-                    style={{ fontSize: 30 }}
-                    onClick={() => handleDeletePost(post.id)}
-                  />
+                    <div class="btn-group dropstart">
+                      <MoreVert 
+                        type="button"
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        id="dropdownMenuOffset" 
+                        data-toggle="dropdown" 
+                        style={{ fontSize: "2rem" }}
+                      />  
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" onClick={handleShowModify}>Modifier la publication</a></li>
+                        <li><a class="dropdown-item"  onClick={() => handleDeletePost(post.id)} >Supprimer la publication</a></li>                      
+                      </ul>
+                    </div>
                   ) : null}
               </div>
             </div>
@@ -92,8 +140,8 @@ const UserPost = ({post}) => {
                 post={post}
               />
               <div className="postBottomRight">
-                <span> {post.comment} </span>
-                <span onClick={handleShowComment} className="postCommentText"> Commentaires</span>
+                <span> {post.Comments.length} </span>
+                <span onClick={handleShowComponent} className="postCommentText"> Commentaires</span>
               </div>
             </div>
             <Comment
@@ -106,10 +154,24 @@ const UserPost = ({post}) => {
                 <CommentList
                   key={comment.id}
                   comment={comment}
+                  post={post}
                 />
               )):null}
         </div>
+        {displayModify? 
+        <ModifyPost
+          key={post.id}
+          post={post}
+          // newFile={newFile}
+          // setNewFile={setNewFile}
+          handleShowModify={handleShowModify}
+          // handleUpdate={handleUpdate}
+          content={content}
+          date={date}
+        />
+        :null}
       </div>
+      
   );
 }
 

@@ -35,3 +35,9 @@ outline: none;
 .grey{
     color:rgba(204, 204, 204, 0.849);
 }
+.opacityModifyComment{
+    opacity: 0;
+}
+.opacityModifyComment:hover{
+    opacity: 1;
+}

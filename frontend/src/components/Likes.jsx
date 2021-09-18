@@ -50,7 +50,7 @@ const Likes = ({post}) =>{
     if(post.Likes.includes(user.id)){
       setIsLiked(true)
     }
-  },[ setIsLiked])
+  },[])
 
 
     

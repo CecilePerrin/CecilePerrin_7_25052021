@@ -43,7 +43,7 @@ const CreatePost = () =>  {
     };
   }
    
-
+  console.log(file)
   return (
 
     <div className="share">
@@ -75,7 +75,7 @@ const CreatePost = () =>  {
           <form className="shareBottom" onSubmit={submitHandler}>
             <div className="shareOptions">
                 <label htmlFor="file" className="shareOption">
-                  <PermMedia htmlColor="tomato" className="shareIcon" />
+                  <PermMedia style ={{color : "#D14662"}} className="shareIcon" />
                   <span className="shareOptionText">Photo or Video</span>
                   <input
                   style={{ display: "none" }}
