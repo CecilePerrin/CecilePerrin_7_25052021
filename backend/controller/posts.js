@@ -62,35 +62,6 @@ exports.modifyPost = (req, res, next) =>{
 }
 
 
-// exports.modifyPost=(req, res)=>{
-//   const postObject = req.body
-
-//   if (req.file) {
-//     postObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${
-//       req.file.filename
-//     }`
-//   }
-//   const options = {where:{id : req.post.id}};
-//   const imageUrl = postObject.imageUrl;
-//   const values = {imageUrl}
-  
-//      try {
-//         await Post.update( values, options)
-//         if(req.fil){
-//           Post.findOne({where:{id: req.params.id}})
-//           .then( (post) =>{
-//             const filename = post.imgUrl.split('/images/')[1];
-//             fs.unlink(`images/${filename}`
-//         }
-//        res.status(201).json({message:'Votre publication est modifiée' })
-//      } catch (error) {
-//        console.log(error)
-//        res.status(400).json({ error })
-//      } 
-
-   
-// }
-// }
 
 exports.getOnePost = (req, res, next) =>{
     Post.findOne({
@@ -224,32 +195,29 @@ exports.getAllComments= (req, res, next) =>{
 
 
 exports.modifyComment= async (req, res, next) =>{
-  try {
-    const comment = await Comment.findOne({
-      where: {
-        id: req.params.id, userId: req.user.id
-      },
-      include: models.User
-    });
+  const content = req.body.content
+  const options = {where:{id : req.params.id, userId: req.user.id}};
+  const values = {content}
 
-    if (!comment) {
-      throw new Error("désolé vous ne pouvez pas modifier ce commentaire");
-    } else{
-      comment.update(req.body)
-      .then(comment=> res.status(200).json({comment}))
-    }   
+  try {
+    const comment = await Comment.findOne(options)
+    if (comment) {
+      console.log(comment)
+      await comment.update(values, options)
+      res.status(200).json({ message:"commentaire modifié" })
+    } 
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error })
   }
+  }   
   
-  }
 
 
 exports.deleteComment= async (req, res, next) =>{
   try {
     const comment = await Comment.findOne({
       where: {
-        id: req.params.id, userId: req.user.id
+        postId: req.params.postId, id: req.params.id, userId: req.user.id
       },
       include: models.User
     });
@@ -258,7 +226,7 @@ exports.deleteComment= async (req, res, next) =>{
       throw new Error("désolé vous ne pouvez pas supprimer ce commentaire");
     } else{
       comment.destroy()
-      .then(() => res.status(200).json({emssage:'commentaire supprimé'}))
+      .then(() => res.status(200).json({message:'commentaire supprimé'}))
     }   
   } catch (error) {
     res.status(400).json({ error: error.message });

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useForm } from 'react-hook-form';
 import { UserContext } from "../../components/UserContext.jsx";
 import { withRouter } from "react-router-dom";
 import CreateIcon from '@material-ui/icons/Create';
@@ -8,13 +9,26 @@ import userBanner from "../../assets/building.jpg"
 import "./profile.css"
 import noavatar from "../../assets/noavatar.JPG"
 import DeleteIcon from "@material-ui/icons/Delete";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup"
 
 
 
-const Profile = () => {
+const Profile = (handleUser) => {
+	
+	const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-	const [updatePassword, setNewPassword] = useState({ newPassword: "" });
-    const { user, setUserData} = useContext(UserContext);
+	const schema = yup.object().shape({
+	    password: yup
+		.string()
+		.required('veuillez renseigner un mot de passe')
+		.matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
+		.min(8, "votre mot de passe doit faire plus de 8 caractères")
+	});
+	const { register, handleSubmit, formState:{errors}} = useForm({
+        resolver: yupResolver(schema)
+    });
+    const {user, setUser} = useContext(UserContext);
 	const [file, setFile] = useState(null);
 	const [error, setError] = useState({errorMessage:""})
 	
@@ -38,41 +52,37 @@ const Profile = () => {
 		console.log("Thing was not deleted to the database.");
 		}
 	};
+	const modifyPassword = async(data)=>{
+		console.log(data)
+		await axios.put("http://localhost:4200/api/users/update", data, {
+			headers:{Authorization: localStorage.getItem('token')
+		  }
+		  });
+	}
 
 
-	const submitHandler = async (e) => {
+	const modifyProfilPicture =async(e)=>{
 		e.preventDefault();
 		const newImg = {
 			imageUrl: file,
-			password : updatePassword,
 		};
-		
-		if (updatePassword === updatePassword.newPassword || file === null){
-			alert("Vous devez remplir votre mot de passe ou changer votre image")
-		}
-		else{
+		const formData = new FormData();
+		formData.append('imageUrl', newImg.imageUrl, newImg.imageUrl.name);
 
-			
-			const formData = new FormData();
-			formData.append('imageUrl', newImg.imageUrl, newImg.imageUrl.name);
-			formData.append('password', newImg.password);
-		  
-			try {
-			  await axios.put("http://localhost:4200/api/users/update", formData, {
+		await axios.put("http://localhost:4200/api/users/update", formData, {
 				headers:{"Content-Type": "multipart/form-data",
 				Authorization: localStorage.getItem('token')
-			  }
-			  });
-			} catch (err) {}
-		}
-	   
-	};
-	  
+			  	}	  
+			  })
+			  .then((res) => {
+				setUser(res.data.values)
+			  })
+	}
 
     return (   
     <>
 		<Nav/>
-		<form onSubmit={submitHandler}>
+		<form onSubmit={modifyProfilPicture}>
 			<div className="profileRight">
 				<div className="profileRightTop">
 					<div className="profileCover">
@@ -93,6 +103,7 @@ const Profile = () => {
 									src={URL.createObjectURL(file)}
 									alt=""
 								/>
+								<button type="submit" className="btn btn-connexion position">Validez</button>
 							</>
 						):<img	
 							className="profileUserImg"
@@ -118,33 +129,35 @@ const Profile = () => {
 					</div>
 				</div>
 			</div>
+		</form>
+		<form onSubmit={modifyPassword}>
 			<div className ="profile-container">
-				<h4> {user.name} {user.firstName}</h4>
-				<div className="cardForm">
-					<div className="login container-fluid" >
-						<h5 className="card-title "> Changez votre mot de passe </h5>
-						<div className="form-group">
-							<label htmlFor="exampleInputPassword">Nouveau mot de passe</label>
-							<input
-								type="password"
-								className="form-control"
-								name="password"
-								value={updatePassword.newPassword}
-								id="password"	
-								onChange={(e) => setNewPassword(e.target.value)}
-								placeholder="Password"
-							/>
+					<h4> {user.name} {user.firstName}</h4>
+					<div className="cardForm">
+						<div className="login container-fluid" >
+							<h5 className="card-title "> Changez votre mot de passe </h5>
+							<div className="form-group">
+								<label htmlFor="exampleInputPassword">Nouveau mot de passe</label>
+								<input
+									type="password"
+									className="form-control"
+									name="password"
+									id="password"
+									{...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
+									placeholder="Password"
+								/>
+								<p style= {{color:"red"}}>{errors.email?.message}</p>
+							</div>
+							<button type="submit" className="btn btn-primary btn-connexion">Validez</button>
 						</div>
-						<button type="submit" className="btn btn-primary btn-connexion">Validez</button>
-					</div>
-					{error.errorMessage != ""?(
+						{error.errorMessage != ""?(
+							
+							<div class="alert alert-warning alert-dismissible " role="alert">
+							{error.errorMessage}
+							</div>
 						
-						<div class="alert alert-warning alert-dismissible " role="alert">
-						{error.errorMessage}
-						</div>
-					
-					):null}
-				</div>
+						):null}
+					</div>
 			</div>
 		</form>
 		<div class="cardForm">

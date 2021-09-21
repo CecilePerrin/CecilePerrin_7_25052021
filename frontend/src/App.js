@@ -34,27 +34,40 @@ const App = () => {
     email: "",
     imageUrl:"",
   })
-console.log(user)
+
+
+
+  // useEffect(() => {
+	// 	if (user.id === "" && ValidToken()) {
+  //     axios.get('http://localhost:4200/api/users', {
+  //       headers: {
+  //         'Authorization': localStorage.getItem('token')
+  //       }
+  //     })
+  //     .then((res) => {
+  //       setUser(res.data.user);
+  //       console.log(res.data)
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //     })
+	// 	}
+	// }, [user]);
+
+  const handleUser = async () =>{
+    await axios.get('http://localhost:4200/api/users', { headers: { Authorization:localStorage.getItem('token') } })
+    .then((response) => {
+      setUser(response.data.user);
+    })
+    .catch(error => console.log(error));
+  }
 
 
   useEffect(() => {
-		if (user.id === "" && ValidToken()) {
-      axios.get('http://localhost:4200/api/users', {
-        headers: {
-          'Authorization': localStorage.getItem('token')
-        }
-      })
-      .then((res) => {
-        setUser(res.data.user);
-        console.log(res.data)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+		if (!user ||user.id === "" && ValidToken()) {
+			handleUser();
 		}
-	}, [user]);
-
-  
+	});
    
   return (
       <Router>
@@ -63,7 +76,7 @@ console.log(user)
                 <Route exact path="/" component = {Login}/> 
                 <Route exact path="/SignUp" component = {SignUp}/>
                 <Route exact path="/Home" component = {Home}/>
-                <Route exact path= "/myprofile" component={Profile} />
+                <Route exact path= "/myprofile" component={Profile} handleUser={handleUser} />
                 <Route exact path="/UserWall/:name" component ={UserWall} />
             </UserContext.Provider>
           </div>

@@ -41,7 +41,6 @@ const SignUp = () => {
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 
     const submitUser = data =>{
-
         axios.post('http://localhost:4200/api/users/signup',data,{ headers: { Authorization:localStorage.getItem('token') } })
         .then(response=> 
             localStorage.setItem("token", response.data.token))

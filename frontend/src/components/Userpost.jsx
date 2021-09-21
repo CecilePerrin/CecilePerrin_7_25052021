@@ -16,7 +16,7 @@ const UserPost = ({post}) => {
   const {user} = useContext(UserContext);
   const [posts, setPosts] = useState(null);
   const date = new Date(post.createdAt).toLocaleString();
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState(0);
   const [displayComponent, setDisplayComponent] = useState(false)
   const [inputReset, setInputReset] = useState(0)
   const [displayModify, setDisplayModify] = useState(false)
@@ -24,34 +24,7 @@ const UserPost = ({post}) => {
 
 
   const content = useRef();
-  // const [newFile, setNewFile] = useState(null)
-
-  // const handleUpdate = async (e, id) => {
-  //   e.preventDefault();
-  //   const modifyPost = {
-  //     userId: user.id,
-  //     content: content.current.value,
-  //     imageUrl: newFile
-  //   };
-
-  //   const formData = new FormData();
-  //   formData.append('userId', modifyPost.userId);
-  //   formData.append('content', modifyPost.content);
-  //   formData.append('imageUrl', modifyPost.imageUrl, modifyPost.imageUrl.name);
-  //   console.log( modifyPost.imageUrl.name);
-  //   try {
-  //     await axios.put(`http://localhost:4200/api/posts/${id}`, formData, {
-  //       headers:{"Content-Type": "multipart/form-data",
-  //       Authorization: localStorage.getItem('token')
-  //     }     
-  //     });
-  //     setDisplayModify(false)
-  //   } catch (err) {}
   
-   
-  // }
-
-
 
   const handleDeletePost = async (id) => {
 		const answer = window.confirm("êtes vous sûr?");
@@ -81,8 +54,9 @@ const UserPost = ({post}) => {
 		if (!comments) {
 			handleComment();
 		}
-	}, [setComments]);
+	});
  
+
   const handleShowComponent = () =>{
       setDisplayComponent(!displayComponent)
     
@@ -140,7 +114,7 @@ const UserPost = ({post}) => {
                 post={post}
               />
               <div className="postBottomRight">
-                <span> {post.Comments.length} </span>
+                <span> {comments.length} </span>
                 <span onClick={handleShowComponent} className="postCommentText"> Commentaires</span>
               </div>
             </div>
@@ -154,6 +128,9 @@ const UserPost = ({post}) => {
                 <CommentList
                   key={comment.id}
                   comment={comment}
+                  comments={comments}
+                  handleComment={handleComment}
+                  setComments={setComments}
                   post={post}
                 />
               )):null}
@@ -162,10 +139,7 @@ const UserPost = ({post}) => {
         <ModifyPost
           key={post.id}
           post={post}
-          // newFile={newFile}
-          // setNewFile={setNewFile}
           handleShowModify={handleShowModify}
-          // handleUpdate={handleUpdate}
           content={content}
           date={date}
         />

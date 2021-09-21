@@ -78,33 +78,18 @@ return (
             ref={content}
           /> 
           <div className="shareImgContainer">
-                          <img className="shareImg" 
-                          src={
-                            newFile?
-                            URL.createObjectURL(newFile)
-                          :post.imgUrl}
-                          alt=""
-                          />
-                          <Cancel 
-                              className="shareCancelImg" 
-                              onClick={() =>setNewFile(null)} 
-                          />
-          </div>
-
-          {/* {newFile.imageUrl ? (
-                    <div className="shareImgContainer">
-                      <img className="shareImg" src={URL.createObjectURL(newFile.imageUrl)} alt="" />
-                      <Cancel className="shareCancelImg" onClick={() =>
-                      setNewFile(null)} />
-                    </div> 
-                    ):
-                    <div className="shareImgContainer">
-                      <img className="shareImg" src={post.imgUrl} alt="" />
-                      <Cancel className="shareCancelImg" onClick={() =>
-                      setNewFile(null)} />
-                    </div>
-                  } */}
-                      
+              <img className="shareImg" 
+                src={
+                  newFile?
+                  URL.createObjectURL(newFile)
+                :post.imgUrl}
+                alt=""
+              />
+              <Cancel 
+                  className="shareCancelImg" 
+                  onClick={() =>setNewFile(null)} 
+              />
+          </div>                     
         </div>
         <form className="shareBottom" onSubmit={(id)=>handleUpdate(id)}>
             <div className="">

@@ -1,6 +1,7 @@
 const bcrypt = require ('bcrypt'); //plug in pour hasher les mdp
 const models = require ('../db/models/index')
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const { User } = models.sequelize.models
 const passwordValidation = require('password-validator')
 require('dotenv').config();
@@ -88,33 +89,26 @@ exports.getOneUser = async (req, res, next) =>{
     	}
 }
 
+
   exports.updateProfile = async (req, res ) =>{
 
-    let userObject = req.body
-
-    if (req.file) {
-      userObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${
-        req.file.filename
-      }`
-    }
     const options = {where:{id : req.user.id}};
-    const imageUrl = userObject.imageUrl;
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     const values = {imageUrl}
+    User.findOne(options)
+    .then( (user) =>{
+      const filename = user.imageUrl.split('/images/')[1];
+      fs.unlink(`images/${filename}`, () =>{
+    User.update(values, options) 
+    .then(() => res.status(200).json ({values}))
+    .catch(error => res.status(400).json({error}));
+      });
+    });       
+}
     
-       try {
-          await models.User.update( values, options)
-          if(req.fil)
-         res.status(201).json({message:'Votre image de profile est modifiée' })
-       } catch (error) {
-         console.log(error)
-         res.status(400).json({ error })
-       } 
-
-     
-  }
-
 
   exports.updatePassword = async (req, res) =>{ 
+
     await User.findOne({ where: { email: req.body.email } })
       .then(user => {
         if(!user){
@@ -135,7 +129,7 @@ exports.getOneUser = async (req, res, next) =>{
               const options = {where:{id : req.user.id}}; 
         
                 try {
-                   models.User.update( values, options)
+                   User.update( values, options)
                   res.status(201).json({message:'Mot de passe modifié!' })
                   } catch (error) {
                   console.log(error)
@@ -150,6 +144,7 @@ exports.getOneUser = async (req, res, next) =>{
 
 
 exports.deleteProfile =  (req, res, next) =>{
+
  models.User.findOne({ where: { id: req.user.id } })
     .then(
       models.User.destroy({

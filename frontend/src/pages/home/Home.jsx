@@ -10,30 +10,34 @@ import '../home/home.css'
 const Home = () => {
 
     const [posts, setPosts] = useState(null);
+	const [inputReset, setInputReset] = useState(0)
 	
-	useEffect(() => {
-		const handlePosts = async () => {	
-			await axios.get('http://localhost:4200/api/posts', { headers: { Authorization:localStorage.getItem('token') } })
-				.then((response) => {
-					console.log("voici les posts")
-					setPosts(response.data.posts);
-					
-				})
-				.catch(error => console.log(error));
-		};if (!posts){
+	const handlePosts = async () =>{
+		await axios.get('http://localhost:4200/api/posts', { headers: { Authorization:localStorage.getItem('token') } })
+		.then((response) => {
+			console.log("voici les posts")
+			setPosts(response.data.posts);
+			setInputReset(inputReset +1)
+		})
+		.catch(error => console.log(error));
+	  }
+	
+	  useEffect(() => {
+		if (!posts) {
 			handlePosts();
 		}
-		
-	}, [setPosts]);
-
-	
+	});
+ 
 	console.log(posts)
 	    
     return (
         <>
             <Nav /> 
             <div className = "container-sm ">
-            	<CreatePost />
+            	<CreatePost
+					key = {inputReset}
+					handlePosts={handlePosts} 
+				/>
 				<div className=''>
 							{posts && (
 								<>

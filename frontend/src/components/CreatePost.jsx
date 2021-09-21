@@ -9,7 +9,7 @@ import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
 
 
-const CreatePost = () =>  {
+const CreatePost = (handlePosts) =>  {
 
   const { user } = useContext(UserContext);
   const content = useRef();
@@ -43,7 +43,6 @@ const CreatePost = () =>  {
     };
   }
    
-  console.log(file)
   return (
 
     <div className="share">

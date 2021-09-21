@@ -109,3 +109,9 @@
 }
 
 
+.position{
+    position: absolute;
+    left: 57%;
+    margin: auto;
+    top: 75%;
+}
