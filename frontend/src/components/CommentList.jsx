@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import SendIcon from '@material-ui/icons/Send';
 import noavatar from "../assets/noavatar.JPG"
 import "./../styles/comment.css"
@@ -51,9 +51,9 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                 <img
                     className="userImageComment"
                     src={
-                    !comment.User.imageUrl
-                    ? comment.User.imageUrl
-                     : noavatar
+                    comment.User.imageUrl =="0"
+                    ? noavatar
+                     : comment.User.imageUrl
                     }
                     alt=""
                     />   
@@ -69,11 +69,12 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                   />
                   <SendIcon onClick ={handleModifyComm}/>
                   </div>
-                  : <span
-                  className="shareCommentInput"
-                  >{comment.content}</span>
+                  : <div className="commentList">
+                      <div className="commentUsername" >{comment.User.name} {comment.User.firstName}</div>
+                      <div>{comment.content}</div>
+                    </div>
                 }
-                 {user.id === comment.User.id && displayModifyComm === false ? (
+                 {user.id === comment.User.id || user.admin === true && displayModifyComm === false ? (
                     <div class="btn-group dropstart">
                       <MoreHorizIcon 
                         // class="opacityModifyComment"

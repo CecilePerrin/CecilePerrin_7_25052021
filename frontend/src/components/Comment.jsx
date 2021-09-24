@@ -36,9 +36,9 @@ const Comment = ({post, handleComment}) => {
                 <img
                     className="userImageComment"
                     src={
-                    !user.imageUrl
-                    ? user.imageUrl
-                    :  noavatar
+                    user.imageUrl == "0"
+                    ? noavatar
+                    :  user.imageUrl
                     }
                     alt=""
                     />
@@ -50,7 +50,7 @@ const Comment = ({post, handleComment}) => {
                     aria-label="comments"
                     name="comments"
                 />
-                <SendIcon onClick ={handleSendComm}/>
+                <SendIcon style = {{cursor:"pointer"}}  onClick ={handleSendComm}/>
           </div>
 		</>
 	);

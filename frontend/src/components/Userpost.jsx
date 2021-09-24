@@ -20,11 +20,8 @@ const UserPost = ({post}) => {
   const [displayComponent, setDisplayComponent] = useState(false)
   const [inputReset, setInputReset] = useState(0)
   const [displayModify, setDisplayModify] = useState(false)
-
-
-
   const content = useRef();
-  
+  const[notifications, setNotifications] = useState({})
 
   const handleDeletePost = async (id) => {
 		const answer = window.confirm("êtes vous sûr?");
@@ -33,7 +30,8 @@ const UserPost = ({post}) => {
         .then((response) => {
           const data = posts.filter((post) => post.id !== id);
           setPosts(data);
-          console.log(response.data);
+          window.location.reload();
+          setNotifications(response.data.message)
         })
         .catch(error => console.log(error));
     }
@@ -72,13 +70,13 @@ const UserPost = ({post}) => {
         <div className="postWrapper">
             <div className="postTop">
               <div className="postTopLeft">
-                <Link to={`/UserWall/${user.name}`}>
+                <Link to={`/UserWall/${post.User.name}`}>
                   <img
                     className="postProfileImg"
-                    src={
-                    post.User.imageUrl = "0"
+                    src={ post.User.imageUrl == "0"
                     ? noavatar
-                    :  post.User.imageUrl}
+                    :  post.User.imageUrl
+                      }
                     alt=""
                   />
                 </Link>
@@ -86,7 +84,7 @@ const UserPost = ({post}) => {
                 <p className="card-text"><small className="text-muted">{date}</small></p>
               </div>
               <div className="postTopRight">
-                  {user.id === post.User.id ? (
+                  {user.id === post.User.id || user.admin == true ? (
                     <div class="btn-group dropstart">
                       <MoreVert 
                         type="button"

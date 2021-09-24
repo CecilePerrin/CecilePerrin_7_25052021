@@ -2,6 +2,7 @@ import React, { useState, useEffect }  from "react";
 import '../../styles/post.css'
 import Nav from '../../components/Nav.jsx'
 import CreatePost from '../../components/CreatePost.jsx';
+import Notification from '../../components/Notification.jsx';
 import UserPost from "../../components/Userpost.jsx";
 import axios from "axios";
 import '../home/home.css'
@@ -28,12 +29,14 @@ const Home = () => {
 		}
 	});
  
-	console.log(posts)
 	    
     return (
         <>
-            <Nav /> 
+            <Nav
+				posts={posts} 
+			/> 
             <div className = "container-sm ">
+				<Notification/>
             	<CreatePost
 					key = {inputReset}
 					handlePosts={handlePosts} 

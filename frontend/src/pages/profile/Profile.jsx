@@ -31,33 +31,39 @@ const Profile = (handleUser) => {
     const {user, setUser} = useContext(UserContext);
 	const [file, setFile] = useState(null);
 	const [error, setError] = useState({errorMessage:""})
-	
+	console.log(schema)
 
 	const deleteUser = (e) =>{
 		e.preventDefault();
 		const answer = window.confirm("êtes vous sûr?");
 		if (answer) {
 			axios.delete('http://localhost:4200/api/users/delete',{ headers: { 'Authorization':localStorage.getItem('token') } })
-			.then(response=> {
-				localStorage.clear();
-				window.location = "/";
-				console.log("vous avez supp votre compte")
-				console.log(response)
-			})    
-			.catch(err => 
-				setError({ errorMessage:err.response.data.error}))
-				console.log(error)
-				console.log("Thing was deleted to the database.");
+				.then(response=> {
+					localStorage.clear();
+					window.location = "/";
+					console.log("vous avez supp votre compte")
+					console.log(response)
+				})    
+				.catch(err => 
+					setError({ errorMessage:err.response.data.error}))
+					console.log(error)
+					console.log("Thing was deleted to the database.");
 		} else {
 		console.log("Thing was not deleted to the database.");
 		}
 	};
+
+
 	const modifyPassword = async(data)=>{
 		console.log(data)
-		await axios.put("http://localhost:4200/api/users/update", data, {
-			headers:{Authorization: localStorage.getItem('token')
-		  }
-		  });
+		await axios.put("http://localhost:4200/api/users/updatePassword", data, {headers:{Authorization: localStorage.getItem('token')}})
+			.then(response=> {
+				console.log(response)
+				window.location.reload();
+			}) 
+			.catch(err => 
+				setError({ errorMessage:err.response.data.error}))
+			
 	}
 
 
@@ -76,7 +82,8 @@ const Profile = (handleUser) => {
 			  })
 			  .then((res) => {
 				setUser(res.data.values)
-			  })
+				setFile(null)
+		})
 	}
 
     return (   
@@ -130,7 +137,7 @@ const Profile = (handleUser) => {
 				</div>
 			</div>
 		</form>
-		<form onSubmit={modifyPassword}>
+		<form onSubmit= {handleSubmit(modifyPassword)}>
 			<div className ="profile-container">
 					<h4> {user.name} {user.firstName}</h4>
 					<div className="cardForm">
@@ -148,6 +155,12 @@ const Profile = (handleUser) => {
 								/>
 								<p style= {{color:"red"}}>{errors.email?.message}</p>
 							</div>
+							{error.errorMessage !== ""?(	
+								<div class="alert alert-warning alert-dismissible " role="alert">
+									{error.errorMessage}
+								</div>
+							
+							):null}
 							<button type="submit" className="btn btn-primary btn-connexion">Validez</button>
 						</div>
 						{error.errorMessage != ""?(

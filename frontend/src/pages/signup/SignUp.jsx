@@ -6,7 +6,7 @@ import "../../styles/login.css";
 import { Link, Redirect } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
-import Warning from "../../components/Warning";
+
 
 
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -36,17 +36,19 @@ const SignUp = () => {
         resolver: yupResolver(schema)
     });
    const [redirect, setRedirect] = useState(false);
+   const [error, setError] = useState({errorMessage:""})
 
         
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
 
     const submitUser = data =>{
         axios.post('http://localhost:4200/api/users/signup',data,{ headers: { Authorization:localStorage.getItem('token') } })
-        .then(response=> 
-            localStorage.setItem("token", response.data.token))
+        .then(response=>{
+            localStorage.setItem("token", response.data.token)
             setRedirect(true)
-        .catch(error => 
-            Warning("danger", error.response.data.error));
+        })    
+        .catch(err => setError({ errorMessage:'ce mail est déjà pris'})|| setError({errorMessage:err.response.data.error}))
+            
 };
 
     return (
@@ -120,10 +122,14 @@ const SignUp = () => {
                             <button type="submit" className="btn btn-primary btn-connexion">
                                 Se connecter
                             </button>
-                        </form>
-                        
+                            {error.errorMessage !== ""?(	
+                                <div class="alert alert-warning alert-dismissible " role="alert">
+                                    {error.errorMessage}
+                                </div>	
+					        ):null}
+                            {redirect && <Redirect to ="/"/>}
+                        </form>            
             </div>
-            {redirect && <Redirect to ="/"/>}
 			
 </>
     );

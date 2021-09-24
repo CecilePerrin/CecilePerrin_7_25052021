@@ -42,7 +42,7 @@ const ModifyPost =
         Authorization: localStorage.getItem('token')
       }     
       });
-      // setDisplayModify(false)
+      window.location.reload();
     } catch (err) {}
   }
  
@@ -74,7 +74,7 @@ return (
         <div className="postCenter">
           <input
             placeholder={post.content}
-            className="postText"
+            className="postText shareInput"
             ref={content}
           /> 
           <div className="shareImgContainer">
@@ -118,17 +118,5 @@ return (
 
 export default ModifyPost;
 
-{/* <div className="shareImgContainer">
-                <img className="shareImg" 
-                src={
-                  newFile?
-                  URL.createObjectURL(newFile)
-                 :post.imgUrl}
-                alt=""
-                />
-                <Cancel 
-                    className="shareCancelImg" 
-                    onClick={() =>setNewFile(null)} 
-                />
-              </div> */}
+
         

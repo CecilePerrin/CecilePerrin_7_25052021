@@ -9,50 +9,38 @@ import Profile from './pages/profile/Profile.jsx';
 import jwt_decode from "jwt-decode";
 import { UserContext } from "./components/UserContext.jsx";
 import UserWall from './pages/userWall/UserWall';
+import ProtectedRoute from './Auth/ProtectedRoute';
 
 
-const ValidToken = () => {
-  if (localStorage.getItem('token')) {
-    const decodedToken = jwt_decode(localStorage.getItem('token'));
-    const dateNow = new Date();
-    if (decodedToken.exp > dateNow / 1000) {
-      return true;
-    } else {
-			localStorage.clear();
-			window.location = "/";
-		}
-  }
-};
 
 
 const App = () => {
-  
+
+  const [isAuth, setIsAuth] =useState(false)
+
+  const ValidToken = () => {
+    if (localStorage.getItem('token')) {
+      const decodedToken = jwt_decode(localStorage.getItem('token'));
+      const dateNow = new Date();
+      if (decodedToken.exp > dateNow / 1000) {
+        return true;
+      } else {
+        localStorage.clear();
+        window.location = "/";
+      }
+    }
+  };
+ 
   const [user, setUser] = useState({
     id: "",
     firstName:"",
     name: "",
     email: "",
     imageUrl:"",
+    admin:"",
   })
 
 
-
-  // useEffect(() => {
-	// 	if (user.id === "" && ValidToken()) {
-  //     axios.get('http://localhost:4200/api/users', {
-  //       headers: {
-  //         'Authorization': localStorage.getItem('token')
-  //       }
-  //     })
-  //     .then((res) => {
-  //       setUser(res.data.user);
-  //       console.log(res.data)
-  //     })
-  //     .catch((error) => {
-  //       console.error(error)
-  //     })
-	// 	}
-	// }, [user]);
 
   const handleUser = async () =>{
     await axios.get('http://localhost:4200/api/users', { headers: { Authorization:localStorage.getItem('token') } })
@@ -65,18 +53,22 @@ const App = () => {
 
   useEffect(() => {
 		if (!user ||user.id === "" && ValidToken()) {
+      setIsAuth(true)
 			handleUser();
-		}
+		} 
 	});
-   
+
+  console.log(isAuth)
+
   return (
       <Router>
-          <div className="App">
+          <div className="App ">
             <UserContext.Provider value={{user, setUser, ValidToken}} >
-                <Route exact path="/" component = {Login}/> 
+                <Route exact path="/" component = {Login}/>
+                <ProtectedRoute exact path ="/myprofile" component={Profile} handleUser={handleUser} isAuth={isAuth} /> 
                 <Route exact path="/SignUp" component = {SignUp}/>
                 <Route exact path="/Home" component = {Home}/>
-                <Route exact path= "/myprofile" component={Profile} handleUser={handleUser} />
+                {/* <Route exact path= "/myprofile" component={Profile} handleUser={handleUser} /> */}
                 <Route exact path="/UserWall/:name" component ={UserWall} />
             </UserContext.Provider>
           </div>

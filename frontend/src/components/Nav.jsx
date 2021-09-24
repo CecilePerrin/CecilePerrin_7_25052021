@@ -7,8 +7,7 @@ import { UserContext } from "../components/UserContext.jsx";
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 
 const Nav = () => {
-   const {user} = useContext(UserContext);
-   
+  const {user} = useContext(UserContext);
   const [redirect, setRedirect] = useState(false)
 
   const handleConnexion = () =>{
@@ -33,12 +32,12 @@ const Nav = () => {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   <li className="nav-item">
                     <Link to="/Home" style={{ textDecoration: "none" }}>
-                    <a class="nav-link active" aria-current="page" >Home</a>
+                    <span className="nav-link active" aria-current="page" >Home</span>
                     </Link>
                   </li>
               </ul>
-              <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+              <form className="d-flex">
+                <input className ="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
               </form>
               <div className="topbarRight">
                   <div className="topbarLinks">
@@ -48,15 +47,15 @@ const Nav = () => {
                           Mes paramètres
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-                          <li><a className="dropdown-item" href="http://localhost:3000/myprofile">Votre compte</a></li>
-                          <li><a className="dropdown-item" onClick={handleConnexion}>Se deconnecter</a></li>
+                          <Link className="dropdown-item" to={`/myprofile`}>Votre compte</Link>
+                          <a className="dropdown-item" onClick={handleConnexion}>Se deconnecter</a>
                         </ul>
                     </div>
                       {redirect && 
                       <Redirect to="/" />
                       }        
                   </div>
-                  <Link to={"/UserWall"}>
+                  <Link to={`/UserWall/${user.name}`}>
                     <img
                       src={
                         user.imageUrl == "0"

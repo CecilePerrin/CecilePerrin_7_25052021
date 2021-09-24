@@ -42,8 +42,8 @@
 
 .postUsername {
   font-size: 15px;
-  font-weight: 500;
   margin: 0 10px;
+  font-weight:550;
 }
 
 .postDate{
@@ -101,3 +101,12 @@
 	z-index: 4;
 }
 
+.postText{
+  margin-bottom: 2rem;
+}
+
+.positionUserWall{
+  position: absolute;
+  right: 40rem;
+  top:20rem
+}

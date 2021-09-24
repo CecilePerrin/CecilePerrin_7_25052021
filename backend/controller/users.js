@@ -26,21 +26,23 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
 exports.signup = (req, res, next) =>{
-
+  
   if (!schema.validate(req.body.password)){
      res.status(400).json({error:"mot de passe invalide"})
     } else if (schema.validate(req.body.password)){
       bcrypt.hash(req.body.password,10)
           .then(hash =>{
-              models.User.create({
+              User.create({
                   email: req.body.email,
                   password: hash,
                   firstName:req.body.firstName,
                   name: req.body.name
-              });
-              user => res.status(201).json(newToken(user))
+              })
+              .then(user => res.status(201).json(newToken(user)))
+              .catch(error=> res.status(401).json({error:error}))
           })
-          .catch(error =>res.status(500).json({error}));
+          .catch(error =>res.status(500).json({error:error}));
+          
       };
 };
 
@@ -74,7 +76,7 @@ exports.login = (req, res, next) =>{
 exports.getOneUser = async (req, res, next) =>{
   try {
     		const user = await models.User.findOne({
-    			attributes: ["id", "firstName","name", "email", "imageUrl"],
+    			attributes: ["id", "firstName","name", "email", "imageUrl", "admin"],
     			where: {
     				id: req.user.id
     			}
@@ -89,8 +91,24 @@ exports.getOneUser = async (req, res, next) =>{
     	}
 }
 
+exports.getUserProfile = async (req, res, next)=>{
+  try{
+    const profileUser = await User.findOne({
+      attributes: ["id", "firstName","name", "imageUrl"],
+      where: {
+        name: req.params.name
+      }
+    })
+    if (!profileUser) {
+      throw new Error("désolé nous ne trouvons pas ce compte");
+    }
+    res.status(200).json({ profileUser });
+  }catch (error){
+    res.status(400).json({ error: error.message });
+  }
+}
 
-  exports.updateProfile = async (req, res ) =>{
+exports.updateProfile = async (req, res, next ) =>{
 
     const options = {where:{id : req.user.id}};
     const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
@@ -106,45 +124,22 @@ exports.getOneUser = async (req, res, next) =>{
     });       
 }
     
+    
+exports.updatePassword = async (req, res, next) =>{ 
 
-  exports.updatePassword = async (req, res) =>{ 
+  const password = await bcrypt.hash(req.body.password, 10);
+  const values = { password}
+  const options = {where:{id : req.user.id}}; 
 
-    await User.findOne({ where: { email: req.body.email } })
-      .then(user => {
-        if(!user){
-            return res.status(401).json({error: "utilisateur non trouvé"})
-        }
-        bcrypt.compare(req.body.password, user.password) 
-          .then(valid =>{ 
-            if (!valid){
-                return res.status(401).json({error:'mot de passe incorrect'})
-            }
-            if (!schema.validate(req.body.password)){
-              res.status(400).json({error:"mot de passe invalide"})
-             }else if(schema.validate(req.body.password)){
-        
-              const salt =  bcrypt.genSalt(10);
-              const password = bcrypt.hash(req.body.password, salt);
-              const values = { password}
-              const options = {where:{id : req.user.id}}; 
-        
-                try {
-                   User.update( values, options)
-                  res.status(201).json({message:'Mot de passe modifié!' })
-                  } catch (error) {
-                  console.log(error)
-                  res.status(400).json({ error })
-                  }
-            }      
-        })
-        .catch(error => res.status(500).json({error}))
-      }) 
+        User.update(options,values)
+          .then(res.status(201).json({message:'Mot de passe modifié!' }))  
+          .catch(res.status(400).json({ error }) )     
+      
 }
 
 
 
 exports.deleteProfile =  (req, res, next) =>{
-
  models.User.findOne({ where: { id: req.user.id } })
     .then(
       models.User.destroy({
@@ -160,3 +155,17 @@ exports.deleteProfile =  (req, res, next) =>{
   });
 }
 
+exports.deleteProfileAdmin =  (req, res, next) =>{
+  
+   User.destroy({
+        where:{
+          name: req.params.name
+        }
+      })
+    .then(
+      res.status(200).json({message: "compte supprimé"})
+    )
+    .catch((err)=>{
+      console.log("Error : ",err)
+  });
+}
