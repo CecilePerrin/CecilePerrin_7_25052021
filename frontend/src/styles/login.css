@@ -1,6 +1,4 @@
-
-
- .btn-connexion {
+.btn-connexion {
   background-color: #D14662;
   color:white;
   border-color:#D14662;
@@ -36,6 +34,7 @@
   margin: auto;
   margin-top: 2rem;
 }
+
 @media (min-width: 64rem) {
   .container{
   background-color: rgb(253, 253, 253);
@@ -69,7 +68,6 @@
 
 .header{
  margin-top: 1rem;
-
 }
 
 hr.divider {
@@ -98,11 +96,13 @@ hr.divider::after{
   display: flex;
   margin: 2rem;
 }
+
 .LinkSignUp{
   font-weight: bold;
   cursor: pointer;
   color: #D14662;
 }
+
 .textLink{
   margin-right: 1rem;
 }

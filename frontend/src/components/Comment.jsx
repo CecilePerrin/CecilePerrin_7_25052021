@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
 import { UserContext } from "./UserContext";
@@ -6,18 +6,16 @@ import SendIcon from '@material-ui/icons/Send';
 import "./../styles/comment.css"
 
 const Comment = ({post, handleComment}) => {
-	
+    console.log(handleComment)
 	const { user } = useContext(UserContext);
-
     const [content, setContent] = useState(null)
-
     const commentText = {
         content: content,
         userId: user.id
     }
     
+
     const handleSendComm = async (e) =>{
-      
         await axios.post(`http://localhost:4200/api/posts/${post.id}/comments`,commentText, { headers: { 'Authorization':localStorage.getItem('token') } })
         .then(response=> {	
             handleComment()
@@ -36,7 +34,7 @@ const Comment = ({post, handleComment}) => {
                 <img
                     className="userImageComment"
                     src={
-                    user.imageUrl == "0"
+                    user.imageUrl === "0"
                     ? noavatar
                     :  user.imageUrl
                     }

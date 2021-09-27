@@ -5,9 +5,11 @@ import { Link, Redirect } from "react-router-dom";
 import noavatar from "../assets/noavatar.JPG"
 import { UserContext } from "../components/UserContext.jsx";
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
+import axios from "axios";
 
 const Nav = () => {
   const {user} = useContext(UserContext);
+  const [data, setData] = useState ([])
   const [redirect, setRedirect] = useState(false)
 
   const handleConnexion = () =>{
@@ -15,17 +17,25 @@ const Nav = () => {
     setRedirect(true)
   }
 
+  const getAllUser = async (e) =>{
+    e.preventDefault()
+    await axios.get('http://localhost:4200/api/user/allUser',{ headers: { 'Authorization':localStorage.getItem('token') } })
+      .then(response=> {
+        setData(response)
+      })    
+      .catch(err => 
+        console.log(err))
+  }
   
  
     return (
-
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
             <div className="topbarLeft">
               <img src={logo} alt="groupomania" className='groupomaniaLogo' />
               <span className="logo">Groupomania</span>
             </div>
-            <button className="navbar-toggler dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -37,9 +47,16 @@ const Nav = () => {
                   </li>
               </ul>
               <form className="d-flex">
-                <input className ="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <input className ="form-control me-2" type="search" placeholder="Recherchez un.e collègue" aria-label="Search"/>
               </form>
+              <div className ="dataResult">
+                {data.map((value, key)=>{
+                  return <Link to={`/UserWall/${value.name}`} className ="dataItem dropdown-item"><p>{value.name}</p></Link>
+                })}
+
+              </div>
               <div className="topbarRight">
+                <li class="nav-item">
                   <div className="topbarLinks">
                     <div className="dropdown me-1">
                     <NotificationsNoneIcon  style ={{color: "#D14662", fontSize:"2rem"} }/>
@@ -48,17 +65,19 @@ const Nav = () => {
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                           <Link className="dropdown-item" to={`/myprofile`}>Votre compte</Link>
-                          <a className="dropdown-item" onClick={handleConnexion}>Se deconnecter</a>
+                          <button className="dropdown-item" onClick={handleConnexion}>Se deconnecter</button>
                         </ul>
                     </div>
                       {redirect && 
                       <Redirect to="/" />
                       }        
                   </div>
+                </li>
+                <li class="nav-item">
                   <Link to={`/UserWall/${user.name}`}>
                     <img
                       src={
-                        user.imageUrl == "0"
+                        user.imageUrl === "0"
                         ? noavatar
                         :  user.imageUrl
                       }
@@ -67,6 +86,7 @@ const Nav = () => {
                       className="topbarImg"
                     />
                   </Link>
+                </li>
               </div>
             </div>
         </div>

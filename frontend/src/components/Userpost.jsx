@@ -11,17 +11,16 @@ import Comment from "./Comment";
 import CommentList from "./CommentList"
 import ModifyPost from "./modifyPost";
 
-const UserPost = ({post}) => {
-
+const UserPost = ({post, posts, setPosts, handlePosts}) => {
+   
   const {user} = useContext(UserContext);
-  const [posts, setPosts] = useState(null);
   const date = new Date(post.createdAt).toLocaleString();
   const [comments, setComments] = useState(0);
   const [displayComponent, setDisplayComponent] = useState(false)
   const [inputReset, setInputReset] = useState(0)
   const [displayModify, setDisplayModify] = useState(false)
   const content = useRef();
-  const[notifications, setNotifications] = useState({})
+  // const[notifications, setNotifications] = useState({})
 
   const handleDeletePost = async (id) => {
 		const answer = window.confirm("êtes vous sûr?");
@@ -30,8 +29,7 @@ const UserPost = ({post}) => {
         .then((response) => {
           const data = posts.filter((post) => post.id !== id);
           setPosts(data);
-          window.location.reload();
-          setNotifications(response.data.message)
+          // setNotifications(response.data.message)
         })
         .catch(error => console.log(error));
     }
@@ -73,7 +71,7 @@ const UserPost = ({post}) => {
                 <Link to={`/UserWall/${post.User.name}`}>
                   <img
                     className="postProfileImg"
-                    src={ post.User.imageUrl == "0"
+                    src={ post.User.imageUrl === "0"
                     ? noavatar
                     :  post.User.imageUrl
                       }
@@ -84,7 +82,7 @@ const UserPost = ({post}) => {
                 <p className="card-text"><small className="text-muted">{date}</small></p>
               </div>
               <div className="postTopRight">
-                  {user.id === post.User.id || user.admin == true ? (
+                  {user.id === post.User.id || user.admin === true ? (
                     <div class="btn-group dropstart">
                       <MoreVert 
                         type="button"
@@ -95,8 +93,8 @@ const UserPost = ({post}) => {
                         style={{ fontSize: "2rem" }}
                       />  
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" onClick={handleShowModify}>Modifier la publication</a></li>
-                        <li><a class="dropdown-item"  onClick={() => handleDeletePost(post.id)} >Supprimer la publication</a></li>                      
+                        <li><button class="dropdown-item"  onClick={handleShowModify}>Modifier la publication</button></li>
+                        <li><button class="dropdown-item"  onClick={() => handleDeletePost(post.id)} >Supprimer la publication</button></li>                      
                       </ul>
                     </div>
                   ) : null}
@@ -137,6 +135,7 @@ const UserPost = ({post}) => {
         <ModifyPost
           key={post.id}
           post={post}
+          handlePosts={handlePosts}
           handleShowModify={handleShowModify}
           content={content}
           date={date}

@@ -10,7 +10,7 @@ import '../home/home.css'
 
 const Home = () => {
 
-    const [posts, setPosts] = useState(null);
+    const [posts, setPosts] = useState(0);
 	const [inputReset, setInputReset] = useState(0)
 	
 	const handlePosts = async () =>{
@@ -18,7 +18,7 @@ const Home = () => {
 		.then((response) => {
 			console.log("voici les posts")
 			setPosts(response.data.posts);
-			setInputReset(inputReset +1)
+			// setInputReset(inputReset +1)
 		})
 		.catch(error => console.log(error));
 	  }
@@ -38,7 +38,9 @@ const Home = () => {
             <div className = "container-sm ">
 				<Notification/>
             	<CreatePost
-					key = {inputReset}
+					key={inputReset}
+					posts={posts}
+					setPosts={setPosts}
 					handlePosts={handlePosts} 
 				/>
 				<div className=''>
@@ -48,6 +50,9 @@ const Home = () => {
 										<UserPost
 											key={post.id}
 											post={post}
+											posts={posts}
+											setPosts={setPosts}
+											handlePosts={handlePosts} 
 										/>
 									))}
 								</>

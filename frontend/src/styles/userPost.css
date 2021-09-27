@@ -110,3 +110,13 @@
   right: 40rem;
   top:20rem
 }
+.headerModify{
+  display: flex;
+  justify-content: end;
+  font-size: large;
+  font-weight: 550;
+}
+
+.headerTextModify{
+  margin-right: 2rem;
+}

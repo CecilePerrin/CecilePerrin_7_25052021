@@ -9,8 +9,8 @@ import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
 
 
-const CreatePost = (handlePosts) =>  {
-
+const CreatePost = (posts) =>  {
+ 
   const { user } = useContext(UserContext);
   const content = useRef();
   const [file, setFile] = useState(null);
@@ -31,15 +31,15 @@ const CreatePost = (handlePosts) =>  {
       formData.append('content', newPost.content);
       formData.append('imageUrl', newPost.imageUrl, newPost.imageUrl.name);
       console.log( newPost.imageUrl.name);
-      try {
         await axios.post("http://localhost:4200/api/posts", formData, {
           headers:{"Content-Type": "multipart/form-data",
-          Authorization: localStorage.getItem('token')
-        }
-        });
-        window.location.reload();
-      } catch (err) {}
-   
+          Authorization: localStorage.getItem('token')}})
+            .then((res)=>{
+              window.location.reload();
+            })
+            .catch((err)=>{
+              console.log(err)
+            }) 
     };
   }
    
@@ -47,15 +47,15 @@ const CreatePost = (handlePosts) =>  {
 
     <div className="share">
       <div className="shareWrapper">
-          <div className="shareTop">
+        <div className="shareTop">
             <img
               className="shareProfileImg"
               src={
-                user.imageUrl == "0"
+                user.imageUrl === "0"
                 ? noavatar
                 :  user.imageUrl
               }
-              alt="Image user"
+              alt="profileImageUser"
               />
             <input
               placeholder={"Quoi de neuf " + user.name + "?"}

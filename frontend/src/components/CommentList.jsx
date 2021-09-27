@@ -51,7 +51,7 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                 <img
                     className="userImageComment"
                     src={
-                    comment.User.imageUrl =="0"
+                    comment.User.imageUrl === "0"
                     ? noavatar
                      : comment.User.imageUrl
                     }
@@ -74,7 +74,7 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                       <div>{comment.content}</div>
                     </div>
                 }
-                 {user.id === comment.User.id || user.admin === true && displayModifyComm === false ? (
+                 {(user.id === comment.User.id || user.admin === true) && (displayModifyComm === false) ? (
                     <div class="btn-group dropstart">
                       <MoreHorizIcon 
                         // class="opacityModifyComment"
@@ -86,8 +86,8 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                         style={{ fontSize: "1rem" }}
                       />  
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" onClick={showModifyComm}>Modifier</a></li>
-                        <li><a class="dropdown-item"  onClick={() => handleDeleteComment(comment.id)} >Supprimer</a></li>                      
+                        <li><button class="dropdown-item" onClick={showModifyComm}>Modifier</button></li>
+                        <li><button class="dropdown-item" onClick={() => handleDeleteComment(comment.id)} >Supprimer</button></li>                      
                       </ul>
                     </div>
                   ) : null}

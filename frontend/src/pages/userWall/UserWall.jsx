@@ -34,10 +34,7 @@ const UserWall = () =>{
 			})
 			.catch(error => console.log(error));
 		};
-		console.log(name)
-		console.log(profileUser)
-		console.log("coucou")
-
+	
 	  useEffect(() => {
 		if (profileUser.name === ""  ) {
 			getUserProfile();
@@ -53,7 +50,7 @@ const UserWall = () =>{
 		})
 		.catch(error => console.log(error));
 	  }
-	  console.log(profileUser)
+
 
 	  useEffect(() => {
 		if (!userPosts) {
@@ -79,7 +76,6 @@ const UserWall = () =>{
     return(
         <>
             <Nav />
-
             <div className="profileRight">
 				<div className="profileRightTop">
 					<div className="profileCover">
@@ -90,7 +86,7 @@ const UserWall = () =>{
 						/>
 							<img
 								src={
-									profileUser.imageUrl == "0"
+									profileUser.imageUrl === "0"
 									? noavatar
 									:  profileUser.imageUrl
 								}
@@ -121,7 +117,6 @@ const UserWall = () =>{
 								</>
 							)}
 				</div>	
-			
         </>
     )
 }

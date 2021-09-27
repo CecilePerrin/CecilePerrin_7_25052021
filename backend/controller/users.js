@@ -3,7 +3,8 @@ const models = require ('../db/models/index')
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const { User } = models.sequelize.models
-const passwordValidation = require('password-validator')
+const passwordValidation = require('password-validator');
+const { Sequelize } = models.Sequelize
 require('dotenv').config();
 
 
@@ -66,9 +67,9 @@ exports.login = (req, res, next) =>{
                 console.log("User logged in");
                 
             })
-            .catch(error => res.status(500).json({error}))
+            .catch(error => res.status(500).json({error:error}))
     })
-    .catch(error => res.status(500).json({error}));
+    .catch(error => res.status(500).json({error:error}));
 };
 
 
@@ -90,6 +91,22 @@ exports.getOneUser = async (req, res, next) =>{
     		res.status(400).json({ error: error.message });
     	}
 }
+exports.getAllUser = async (req, res, next)=>{
+  const {term} = req.query;
+  const options = {
+    where: Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'),Sequelize.col('lastName')),
+      {
+       [Sequelize.Op.like]:`%${term}%`
+       }
+    ),  
+
+    }
+    User.findAll(options)
+    .then((users) => res.status(200).json ({users}))
+    .catch(error => res.status(400).json({error:error}));
+  
+}
+
 
 exports.getUserProfile = async (req, res, next)=>{
   try{
@@ -119,7 +136,7 @@ exports.updateProfile = async (req, res, next ) =>{
       fs.unlink(`images/${filename}`, () =>{
     User.update(values, options) 
     .then(() => res.status(200).json ({values}))
-    .catch(error => res.status(400).json({error}));
+    .catch(error => res.status(400).json({error:error}));
       });
     });       
 }
@@ -130,11 +147,9 @@ exports.updatePassword = async (req, res, next) =>{
   const password = await bcrypt.hash(req.body.password, 10);
   const values = { password}
   const options = {where:{id : req.user.id}}; 
-
         User.update(options,values)
           .then(res.status(201).json({message:'Mot de passe modifié!' }))  
-          .catch(res.status(400).json({ error }) )     
-      
+          .catch(error=>res.status(400).json({ error:error }) )       
 }
 
 
@@ -150,8 +165,8 @@ exports.deleteProfile =  (req, res, next) =>{
     .then(
       res.status(200).json({message: "compte supprimé"})
     ))
-    .catch((err)=>{
-      console.log("Error : ",err)
+    .catch((error)=>{
+      res.status(400).json({ error:error }) 
   });
 }
 
@@ -165,7 +180,7 @@ exports.deleteProfileAdmin =  (req, res, next) =>{
     .then(
       res.status(200).json({message: "compte supprimé"})
     )
-    .catch((err)=>{
-      console.log("Error : ",err)
+    .catch((error)=>{
+      res.status(400).json({ error:error }) 
   });
 }

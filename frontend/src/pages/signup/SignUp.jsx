@@ -9,7 +9,7 @@ import * as yup from "yup"
 
 
 
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+const PASSWORD_REGEX =  /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
 
 const schema = yup.object().shape({
 	    firstName: yup
@@ -99,7 +99,7 @@ const SignUp = () => {
                                     name="email"
                                     id="validationServer02"
                                     aria-describedby="emailHelp"
-                                    {...register("email", { pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
+                                    {...register("email", { pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
                                     placeholder="robert.87@gmail.com"
                                     autoFocus
                                 />
@@ -129,8 +129,7 @@ const SignUp = () => {
 					        ):null}
                             {redirect && <Redirect to ="/"/>}
                         </form>            
-            </div>
-			
+            </div>	
 </>
     );
 }

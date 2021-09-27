@@ -11,7 +11,7 @@ import { UserContext } from "../../components/UserContext.jsx";
 
 const schema = yup.object().shape({
 	email: yup.string().required('Veuillez entrer votre email').email(), 
-	password: yup.string().required('veuillez renseigner un mot de passe').min(8)
+	password: yup.string().required('Veuillez renseigner un mot de passe').min(8)
 });
 	
 	
@@ -21,7 +21,7 @@ const Login = () => {
 			resolver: yupResolver(schema)
 	});
 
-	const { setUser, alert} = useContext(UserContext);	
+	const { setUser} = useContext(UserContext);	
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState({errorMessage:""})
 	
@@ -62,7 +62,7 @@ const Login = () => {
 								className="form-control input-login"
 								name="email"
 								aria-describedby="emailHelp"
-								{...register("email", { pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
+								{...register("email", { pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
 								placeholder="robert.87@gmail.com"
 								autoFocus
 							/>

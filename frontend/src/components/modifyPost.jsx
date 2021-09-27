@@ -1,5 +1,5 @@
 
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
@@ -8,21 +8,15 @@ import "../styles/userPost.css"
 import {Cancel, PermMedia} from"@material-ui/icons"
 
 
-const ModifyPost = 
-({post, 
-  handleShowModify, 
-  content,
-  date,
-}) => {
+const ModifyPost = ({post, handleShowModify, content, date,}) => {
+
   const [newFile, setNewFile] = useState(null)
   const {user} = useContext(UserContext);
-
- 
 
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log(post)
+
     const modifyPost = {
       userId: user.id,
       content: content.current.value,
@@ -51,9 +45,10 @@ return (
   <div className ="cover">
     <div className="post modifyPost">
       <div className="postWrapper">
-        <div>
-            <span>Modifier la publication</span>
+        <div className="headerModify">
+            <span className="headerTextModify" >Modifier la publication</span>
             <Cancel onClick={handleShowModify} />
+            <hr className="shareHr" />
         </div>
         <div className="postTop">
           <div className="postTopLeft">
@@ -112,7 +107,6 @@ return (
       </div>
     </div>
   </div>
-    
   );
 }
 

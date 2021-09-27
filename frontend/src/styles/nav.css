@@ -1,11 +1,9 @@
-
 .topbarContainer {
 
   width: 100%;
   background-color: #eeeeee;
   display: flex;
   align-items: center;
-
 }
 
 .topbarLeft {
@@ -36,6 +34,7 @@
   background-color: #e698a8;
   border-color:#e698a8;
 }
+
 .searchInput:focus {
   outline: none;
 }
@@ -64,8 +63,6 @@
   position: relative;
 }
 
-
-
 .topbarImg {
   width: 52px;
   height: 52px;
@@ -76,10 +73,11 @@
 
 .groupomaniaLogo {
   height: 4rem;
-};
+}
 
 .notificationNav{
   color: #D14662 !important;
   height: 2rem;
   width: 2rem;
 }
+

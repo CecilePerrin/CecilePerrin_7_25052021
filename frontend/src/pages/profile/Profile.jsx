@@ -13,25 +13,25 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
 
 
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+
+const schema = yup.object().shape({
+	password: yup
+	.string()
+	.required('veuillez renseigner un mot de passe')
+	.matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
+	.min(8, "votre mot de passe doit faire plus de 8 caractères")
+});
 
 const Profile = (handleUser) => {
 	
-	const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
-	const schema = yup.object().shape({
-	    password: yup
-		.string()
-		.required('veuillez renseigner un mot de passe')
-		.matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
-		.min(8, "votre mot de passe doit faire plus de 8 caractères")
-	});
 	const { register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(schema)
     });
     const {user, setUser} = useContext(UserContext);
 	const [file, setFile] = useState(null);
 	const [error, setError] = useState({errorMessage:""})
-	console.log(schema)
+	console.log(errors)
 
 	const deleteUser = (e) =>{
 		e.preventDefault();
@@ -63,6 +63,7 @@ const Profile = (handleUser) => {
 			}) 
 			.catch(err => 
 				setError({ errorMessage:err.response.data.error}))
+				console.log(error)
 			
 	}
 
@@ -115,7 +116,7 @@ const Profile = (handleUser) => {
 						):<img	
 							className="profileUserImg"
 							src={
-								user.imageUrl == "0"
+								user.imageUrl === "0"
 								? noavatar
 								:  user.imageUrl
 							}
@@ -153,7 +154,7 @@ const Profile = (handleUser) => {
 									{...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
 									placeholder="Password"
 								/>
-								<p style= {{color:"red"}}>{errors.email?.message}</p>
+								<p style= {{color:"red"}}>{errors.password?.message}</p>
 							</div>
 							{error.errorMessage !== ""?(	
 								<div class="alert alert-warning alert-dismissible " role="alert">
@@ -163,8 +164,7 @@ const Profile = (handleUser) => {
 							):null}
 							<button type="submit" className="btn btn-primary btn-connexion">Validez</button>
 						</div>
-						{error.errorMessage != ""?(
-							
+						{error.errorMessage !== ""?(
 							<div class="alert alert-warning alert-dismissible " role="alert">
 							{error.errorMessage}
 							</div>
