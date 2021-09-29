@@ -6,8 +6,7 @@ const {Like} = models.sequelize.models
 const {Comment} = models.sequelize.models
 const {User}= models.sequelize.models
 
-//Post
-
+//POSTS
 
 exports.createPost = async (req, res, next) => {
   const postObject = req.body
@@ -57,7 +56,7 @@ exports.modifyPost = (req, res, next) =>{
     } else{
       Post.update( values, options)
       .then(() => res.status(200).json ({message:'post modifié'}))
-      .catch(error => res.status(400).json({error}));
+      .catch(error => res.status(400).json({ error }));
     }   
 }
 
@@ -126,6 +125,7 @@ exports.deletepost = (req, res, next) =>{
 
 //LIKE 
 
+
 exports.likeOnePost = async(req, res, next)=>{
   try {
     const existingLike = await Like.findOne({
@@ -163,7 +163,7 @@ exports.getAllLikes = async (req, res, next) =>{
     .catch(error => res.status(404).json({ error }))
 }
 
-//Comments
+//COMMENTS
 
 exports.createComment = async (req, res, next) =>{
   if (req.body.content) {
@@ -184,7 +184,6 @@ exports.createComment = async (req, res, next) =>{
 
 
 }
-
 
 exports.getAllComments= (req, res, next) =>{
   const limit = 10

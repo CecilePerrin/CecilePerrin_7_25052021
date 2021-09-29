@@ -44,34 +44,35 @@ const Login = () => {
 	return (
 		<>
 			<Banner/>
-			<div className="header">
+			<header className="header">
 				<div className="containerLink">
-								<p className="textLink">Vous n'avez pas de compte?</p>
-								<Link to="/SignUp" className="LinkSignUp"> S'inscrire</Link>
+					<p className="textLink">Vous n'avez pas de compte?</p>
+					<Link to="/SignUp" className="LinkSignUp"> S'inscrire</Link>
 				</div>
 				
-				<hr className="divider"></hr>
-			</div>
-			<div className="container row">
+				<hr className="divider" role="separator"></hr>
+			</header>
+			<main className="container row">
 				<form onSubmit= {handleSubmit(loginUser)}  className="login container-fluid" >
-					<h2 className="title-form" >Se connecter</h2>
-					<div className="form-group">
+					<h1 className="title-form" >Se connecter</h1>
+					<div className="form-group" role="group">
 						<label htmlFor="email" className="form-label">Email</label>
 							<input
 								type="email"
+								aria-label="Écrire votre email"
 								className="form-control input-login"
 								name="email"
-								aria-describedby="emailHelp"
 								{...register("email", { pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ })}
 								placeholder="robert.87@gmail.com"
 								autoFocus
 							/>
 						<p style= {{color:"red"}} >{errors.email?.message}</p>
 					</div>
-					<div className="form-group">
-						<label htmlFor="exampleInputPassword">Mot de passe</label>
+					<div className="form-group" role="group">
+						<label htmlFor="password">Mot de passe</label>
 						<input
 							type="password"
+							aria-label="Écrire votre mot de passe"
 							className="form-control input-login "
 							name="password"
 							{...register("password", { pattern: /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/ })}
@@ -80,19 +81,18 @@ const Login = () => {
 						/>
 						<p style= {{color:"red"}} >{errors.password?.message}</p>
 					</div>
-					<h2 id="emailHelp" className="form-text" aria-hidden="true"></h2>
-					<button type="submit" className="btn btn-primary btn-connexion">
+					<button type="submit" className="btn btn-primary btn-connexion" aria-label="Se connecter">
 						Se connecter
 					</button>
 					{error.errorMessage !== ""?(	
-						<div class="alert alert-warning alert-dismissible " role="alert">
+						<div aria-hidden="true"  className="alert alert-warning alert-dismissible " role="alert">
 							{error.errorMessage}
 						</div>
 						
 					):null}
 					{redirect && <Redirect to="/home" />}
 				</form>
-			</div>
+			</main>
 						
 		</>
 	);

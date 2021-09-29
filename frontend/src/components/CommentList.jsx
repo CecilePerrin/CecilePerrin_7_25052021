@@ -13,16 +13,16 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
     const [newContent, setNewContent] = useState(null)
 
     const handleDeleteComment = async (id)=>{
-        const answer = window.confirm("êtes vous sûr?");
-        if (answer) {
-        await axios.delete(`http://localhost:4200/api/posts/${post.id}/comments/${comment.id}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
-        .then((response) => {
-          const data = comments.filter((comment) => comment.id !== id);
-          setComments(data);
-          console.log(response.data);
-        })
-        .catch(error => console.log(error));
-        }
+      const answer = window.confirm("êtes vous sûr?");
+      if (answer) {
+      await axios.delete(`http://localhost:4200/api/posts/${post.id}/comments/${comment.id}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
+      .then((response) => {
+        const data = comments.filter((comment) => comment.id !== id);
+        setComments(data);
+        console.log(response.data);
+      })
+      .catch(error => console.log(error));
+      }
     }
     
     const showModifyComm =()=>{
@@ -77,7 +77,6 @@ const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
                  {(user.id === comment.User.id || user.admin === true) && (displayModifyComm === false) ? (
                     <div class="btn-group dropstart">
                       <MoreHorizIcon 
-                        // class="opacityModifyComment"
                         type="button"
                         data-bs-toggle="dropdown" 
                         aria-expanded="false"

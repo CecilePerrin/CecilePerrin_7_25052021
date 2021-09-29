@@ -10,32 +10,50 @@ const Likes = ({post}) =>{
   const [likes, setLikes] = useState(0)  
   const [isLiked, setIsLiked]=useState(false)
   const userId = user.id
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source()
 
   const getLike = async ()=>{
-    await axios.get(`http://localhost:4200/api/posts/${post.id}/likes`, { headers: { Authorization:localStorage.getItem('token') } })
+    await axios.get(`http://localhost:4200/api/posts/${post.id}/likes`, { headers: { Authorization:localStorage.getItem('token') }, 
+      cancelToken:source.token })
     .then((response) => {
       setLikes(response.data.likes);
       
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      if (axios.isCancel(error)){
+        console.log('Request canceled', error.message)
+      }else{
+        console.log(error)
+      }
+    });
   }
-
-
+  
+  
   const getUserLike = async (id)=>{
-    await axios.get(`http://localhost:4200/api/posts/${post.id}/likes/${userId}`, { headers: { Authorization:localStorage.getItem('token') } })
+    await axios.get(`http://localhost:4200/api/posts/${post.id}/likes/${userId}`, { headers: { Authorization:localStorage.getItem('token') },
+     cancelToken:source.token})
     .then((response) => {
       setIsLiked(response.data.like);
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      if (axios.isCancel(error)){
+        console.log('Request canceled', error.message)
+      }else{
+        console.log(error)
+      }
+    });
+   
   }
 
   useEffect (()=>{
       getLike()
-      console.log("le like a changé sur ce post")
+      return () =>{source.cancel()} 
   },[])
 
   useEffect (()=>{
     getUserLike()
+    return () =>{source.cancel()} 
 },[likes])
 
 

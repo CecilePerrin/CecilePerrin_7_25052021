@@ -11,6 +11,7 @@ import Comment from "./Comment";
 import CommentList from "./CommentList"
 import ModifyPost from "./modifyPost";
 
+
 const UserPost = ({post, posts, setPosts, handlePosts}) => {
    
   const {user} = useContext(UserContext);
@@ -20,7 +21,7 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
   const [inputReset, setInputReset] = useState(0)
   const [displayModify, setDisplayModify] = useState(false)
   const content = useRef();
-  // const[notifications, setNotifications] = useState({})
+ 
 
   const handleDeletePost = async (id) => {
 		const answer = window.confirm("êtes vous sûr?");
@@ -29,7 +30,6 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
         .then((response) => {
           const data = posts.filter((post) => post.id !== id);
           setPosts(data);
-          // setNotifications(response.data.message)
         })
         .catch(error => console.log(error));
     }
@@ -37,12 +37,18 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
 
 	
   const handleComment = async () =>{
-    await axios.get(`http://localhost:4200/api/posts/${post.id}/comments`, { headers: { Authorization:localStorage.getItem('token') } })
+    await axios.get(`http://localhost:4200/api/posts/${post.id}/comments`, { headers: { Authorization:localStorage.getItem('token') },
+ })
     .then((response) => {
       setComments(response.data.comments);
+      console.log(response.data.comments)
       setInputReset(inputReset +1)
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+     
+        console.log(error)
+      
+    });
   }
 
 
@@ -75,7 +81,7 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
                     ? noavatar
                     :  post.User.imageUrl
                       }
-                    alt=""
+                    alt="profile image utilisateur"
                   />
                 </Link>
                 <span className="postUsername">{post.User.name} {post.User.firstName}</span>
@@ -83,7 +89,7 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
               </div>
               <div className="postTopRight">
                   {user.id === post.User.id || user.admin === true ? (
-                    <div class="btn-group dropstart">
+                    <div class="btn-group dropstart" >
                       <MoreVert 
                         type="button"
                         data-bs-toggle="dropdown" 
@@ -91,10 +97,11 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
                         id="dropdownMenuOffset" 
                         data-toggle="dropdown" 
                         style={{ fontSize: "2rem" }}
+                        tabindex="0"
                       />  
                       <ul class="dropdown-menu">
-                        <li><button class="dropdown-item"  onClick={handleShowModify}>Modifier la publication</button></li>
-                        <li><button class="dropdown-item"  onClick={() => handleDeletePost(post.id)} >Supprimer la publication</button></li>                      
+                        <li role="option"><button class="dropdown-item"  onClick={handleShowModify}>Modifier la publication</button></li>
+                        <li role="option"><button class="dropdown-item"  onClick={() => handleDeletePost(post.id)} >Supprimer la publication</button></li>                      
                       </ul>
                     </div>
                   ) : null}
@@ -141,8 +148,7 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
           date={date}
         />
         :null}
-      </div>
-      
+      </div>   
   );
 }
 

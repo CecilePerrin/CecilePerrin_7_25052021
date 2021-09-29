@@ -50,7 +50,6 @@ exports.signup = (req, res, next) =>{
 
 console.log("Connected to the server");
 
-  
 
 exports.login = (req, res, next) =>{
   User.findOne({ where: { email: req.body.email } })
@@ -73,7 +72,6 @@ exports.login = (req, res, next) =>{
 };
 
 
-
 exports.getOneUser = async (req, res, next) =>{
   try {
     		const user = await models.User.findOne({
@@ -91,12 +89,13 @@ exports.getOneUser = async (req, res, next) =>{
     		res.status(400).json({ error: error.message });
     	}
 }
+
+
 exports.getAllUser = async (req, res, next)=>{
-  const {term} = req.query;
   const options = {
-    where: Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'),Sequelize.col('lastName')),
+    where: Sequelize.where(Sequelize.fn('concat', Sequelize.col('firstName'),Sequelize.col('name')),
       {
-       [Sequelize.Op.like]:`%${term}%`
+       [Sequelize.Op.like]:`%${req.query.search}%`
        }
     ),  
 
@@ -104,7 +103,7 @@ exports.getAllUser = async (req, res, next)=>{
     User.findAll(options)
     .then((users) => res.status(200).json ({users}))
     .catch(error => res.status(400).json({error:error}));
-  
+ 
 }
 
 
@@ -126,27 +125,27 @@ exports.getUserProfile = async (req, res, next)=>{
 }
 
 exports.updateProfile = async (req, res, next ) =>{
+  const options = {where:{id : req.user.id}};
+  const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  const values = {imageUrl}
 
-    const options = {where:{id : req.user.id}};
-    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    const values = {imageUrl}
-    User.findOne(options)
-    .then( (user) =>{
-      const filename = user.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () =>{
-    User.update(values, options) 
-    .then(() => res.status(200).json ({values}))
-    .catch(error => res.status(400).json({error:error}));
-      });
-    });       
+  User.findOne(options)
+  .then( (user) =>{
+    const filename = user.imageUrl.split('/images/')[1];
+    fs.unlink(`images/${filename}`, () =>{
+  User.update(values, options) 
+  .then(() => res.status(200).json ({values}))
+  .catch(error => res.status(400).json({error:error}));
+    });
+  });       
 }
     
     
 exports.updatePassword = async (req, res, next) =>{ 
-
   const password = await bcrypt.hash(req.body.password, 10);
   const values = { password}
-  const options = {where:{id : req.user.id}}; 
+  const options = {where:{id : req.user.id}};
+
         User.update(options,values)
           .then(res.status(201).json({message:'Mot de passe modifié!' }))  
           .catch(error=>res.status(400).json({ error:error }) )       
@@ -171,7 +170,6 @@ exports.deleteProfile =  (req, res, next) =>{
 }
 
 exports.deleteProfileAdmin =  (req, res, next) =>{
-  
    User.destroy({
         where:{
           name: req.params.name

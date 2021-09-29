@@ -73,6 +73,8 @@ const UserWall = () =>{
 		console.log("Thing was not deleted to the database.");
 		}
 	};
+
+	
     return(
         <>
             <Nav />
@@ -91,7 +93,7 @@ const UserWall = () =>{
 									:  profileUser.imageUrl
 								}
                   
-								alt=""
+								alt="photo de profil utilisateur"
 								className="profileUserImg"
                     		/>
 					</div>
@@ -106,16 +108,16 @@ const UserWall = () =>{
 			:null
 			}
 			<div className=''>
-							{userPosts && (
-								<>
-									{userPosts.map((post) => (
-										<UserPost
-											key={post.id}
-											post={post}
-										/>
-									))}
-								</>
-							)}
+				{userPosts && (
+									<>
+										{userPosts.map((post) => (
+											<UserPost
+												key={post.id}
+												post={post}
+											/>
+										))}
+									</>
+								)}
 				</div>	
         </>
     )

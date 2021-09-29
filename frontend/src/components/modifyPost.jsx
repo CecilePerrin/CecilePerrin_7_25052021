@@ -77,10 +77,11 @@ return (
                 src={
                   newFile?
                   URL.createObjectURL(newFile)
-                :post.imgUrl}
-                alt=""
+                  :post.imgUrl}
+                   alt=""
               />
               <Cancel 
+                  tabindex="0"
                   className="shareCancelImg" 
                   onClick={() =>setNewFile(null)} 
               />
@@ -89,7 +90,7 @@ return (
         <form className="shareBottom" onSubmit={(id)=>handleUpdate(id)}>
             <div className="">
                 <label htmlFor="modifyFile" className="shareOption">
-                  <PermMedia style ={{color : "#D14662"}} className="shareIcon" />
+                  <PermMedia style ={{color : "#D14662"}} className="shareIcon" tabindex="0" />
                   <span className="shareOptionText">Photo or Video</span>
                   <input
                     style={{ display: "none" }}
@@ -100,7 +101,7 @@ return (
                   />
                 </label>
             </div>
-            <button className="shareButton"  type="submit">
+            <button className="shareButton" tabindex="0" type="submit">
              Modifier
             </button>
         </form>              

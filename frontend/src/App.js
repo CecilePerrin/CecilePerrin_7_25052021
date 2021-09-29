@@ -15,8 +15,6 @@ import ProtectedRoute from './Auth/ProtectedRoute';
 
 
 const App = () => {
-  
-  const [isAuth, setIsAuth] =useState(true)
 
   const ValidToken = () => {
     if (localStorage.getItem('token')) {
@@ -26,7 +24,6 @@ const App = () => {
         return true;
       } else {
         localStorage.clear();
-        setIsAuth(false)
       }
     }
   };
@@ -57,17 +54,16 @@ const App = () => {
 		} 
 	},[user]);
 
-  console.log(isAuth)
 
   return (
       <Router>
           <div className="App ">
-            <UserContext.Provider value={{user, setUser, ValidToken}} >
-                <Route exact path="/" component = {Login}/>
+            <UserContext.Provider value={{user, setUser,}} >
+                <Route exact path="/" component = {Login} />
                 <Route exact path="/SignUp" component = {SignUp}/>
-                <ProtectedRoute exact path="/Home" component = {Home} isAuth={isAuth}/>
-                <ProtectedRoute exact path ="/myprofile" component={Profile} handleUser={handleUser} isAuth={isAuth} /> 
-                <ProtectedRoute exact path="/UserWall/:name" component ={UserWall}  isAuth={isAuth} />
+                <ProtectedRoute exact path="/Home" component = {Home} ValidToken={ValidToken}/>
+                <ProtectedRoute exact path ="/myprofile" component={Profile} handleUser={handleUser} ValidToken={ValidToken} /> 
+                <ProtectedRoute exact path="/UserWall/:name" component ={UserWall}  ValidToken={ValidToken} />
             </UserContext.Provider>
           </div>
       </Router>

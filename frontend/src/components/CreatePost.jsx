@@ -9,7 +9,7 @@ import axios from "axios";
 import noavatar from "../assets/noavatar.JPG"
 
 
-const CreatePost = (posts) =>  {
+const CreatePost = () =>  {
  
   const { user } = useContext(UserContext);
   const content = useRef();
@@ -25,6 +25,8 @@ const CreatePost = (posts) =>  {
 
     if (content.current.value === "" || file === null ){
      alert("Vous ne pouvez pas envoyer un post vide")
+    }else if (newPost.content.length > 100){
+      alert("Vous ne pouvez pas envoyer un post de plus de 100 caractères")
     }else{
       const formData = new FormData();
       formData.append('userId', newPost.userId);
@@ -55,9 +57,11 @@ const CreatePost = (posts) =>  {
                 ? noavatar
                 :  user.imageUrl
               }
-              alt="profileImageUser"
+              alt="profile Image Utilisateur"
               />
             <input
+              type="text"
+              aria-label="Écrire une publication"
               placeholder={"Quoi de neuf " + user.name + "?"}
               className="shareInput"
               ref={content}
@@ -67,25 +71,25 @@ const CreatePost = (posts) =>  {
           {file && (
           <div className="shareImgContainer">
             <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
-            <Cancel className="shareCancelImg" onClick={() =>
+            <Cancel tabindex="0" className="shareCancelImg" onClick={() =>
             setFile(null)} />
           </div>
           )}
           <form className="shareBottom" onSubmit={submitHandler}>
             <div className="shareOptions">
                 <label htmlFor="file" className="shareOption">
-                  <PermMedia style ={{color : "#D14662"}} className="shareIcon" />
+                  <PermMedia style ={{color : "#D14662"}} className="shareIcon"  tabindex="0"/>
                   <span className="shareOptionText">Photo or Video</span>
                   <input
-                  style={{ display: "none" }}
-                  type="file"
-                  id="file"
-                  accept=".png,.jpeg,.jpg"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  />
+                    style={{ display: "none" }}
+                    type="file"
+                    id="file"
+                    accept=".png,.jpeg,.jpg,.gif"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    />
                 </label>
             </div>
-            <button className="shareButton" type="submit">
+            <button className="shareButton" type="submit" tabindex="0">
             Share
             </button>
           </form>

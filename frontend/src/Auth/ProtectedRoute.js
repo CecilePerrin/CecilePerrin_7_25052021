@@ -2,14 +2,14 @@ import React from "react";
 
 import { Route, Redirect} from "react-router-dom";
 
-function ProtectedRoute({isAuth: isAuth, component: Component, ...rest}){
+function ProtectedRoute({ValidToken: ValidToken, component: Component, ...rest}){
     
 
     return (
         <Route
             {...rest} 
             render ={(props)=> {
-            if (isAuth){
+            if (ValidToken){
                 return <Component/>;
             }else{
                 return(
@@ -22,3 +22,4 @@ function ProtectedRoute({isAuth: isAuth, component: Component, ...rest}){
 }
 
 export default ProtectedRoute;
+

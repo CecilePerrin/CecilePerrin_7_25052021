@@ -7,7 +7,7 @@ import "../styles/banner.css"
 function Banner() {
     return (
         <div className='grpomania-banner'>
-            <div className="hero-elem-deco"></div>
+            <div className="hero-elem-deco" role="banner"></div>
             <img src={logo} alt="groupomania" className='logoBlack' />
             <img src={logoWhite} alt="groupomania" className='logoWhite' />
             <img src={imgAcc} alt ="groupomania" className='imgAcc img-fluid'/>

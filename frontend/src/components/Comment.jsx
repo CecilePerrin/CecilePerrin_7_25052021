@@ -6,7 +6,7 @@ import SendIcon from '@material-ui/icons/Send';
 import "./../styles/comment.css"
 
 const Comment = ({post, handleComment}) => {
-    console.log(handleComment)
+    
 	const { user } = useContext(UserContext);
     const [content, setContent] = useState(null)
     const commentText = {
@@ -15,7 +15,7 @@ const Comment = ({post, handleComment}) => {
     }
     
 
-    const handleSendComm = async (e) =>{
+    const handleSendComm = async () =>{
         await axios.post(`http://localhost:4200/api/posts/${post.id}/comments`,commentText, { headers: { 'Authorization':localStorage.getItem('token') } })
         .then(response=> {	
             handleComment()
