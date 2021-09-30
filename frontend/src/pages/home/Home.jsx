@@ -20,7 +20,7 @@ const Home = () => {
 		.catch(error => console.log(error));
 		}
 
-		useEffect(() => {
+	useEffect(() => {
 		if (!posts) {
 			handlePosts();
 		}
@@ -43,23 +43,23 @@ return (
 					handlePosts={handlePosts} 
 				/>
 				<div className=''>
-							{posts && (
-								<>
-									{posts.map((post) => (
-										<UserPost
-											key={post.id}
-											post={post}
-											posts={posts}
-											setPosts={setPosts}
-											handlePosts={handlePosts} 
-										/>
-									))}
-								</>
-							)}
+					{posts && (
+						<>
+							{posts.map((post) => (
+								<UserPost
+									key={post.id}
+									post={post}
+									posts={posts}
+									setPosts={setPosts}
+									handlePosts={handlePosts} 
+								/>
+							))}
+						</>
+					)}
 				</div>	
 			</div>
 		</main>
-		</>
+	</>
     )
 };
 
