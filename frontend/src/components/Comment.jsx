@@ -7,39 +7,38 @@ import "./../styles/comment.css"
 
 const Comment = ({post, handleComment}) => {
     
-	const { user } = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const [content, setContent] = useState(null)
     const commentText = {
         content: content,
         userId: user.id
     }
-    
+
 
     const handleSendComm = async () =>{
         await axios.post(`http://localhost:4200/api/posts/${post.id}/comments`,commentText, { headers: { 'Authorization':localStorage.getItem('token') } })
         .then(response=> {	
             handleComment()
-			console.log(response)
+            console.log(response)
             setContent(null)
-                       
-		})    
+        })    
         .catch(err => 
-			console.log(err)
-    )}
+            console.log(err))
+    };
 
 
 	return (
 		<>
-			<div className="shareComment">
+            <div className="shareComment">
                 <img
                     className="userImageComment"
                     src={
-                    user.imageUrl === "0"
-                    ? noavatar
-                    :  user.imageUrl
-                    }
+                        user.imageUrl === "0"
+                        ? noavatar
+                        :  user.imageUrl
+                        }
                     alt=""
-                    />
+                />
                 <input
                     type="text"
                     placeholder={"Ecrivez un commentaire..."}
@@ -49,7 +48,7 @@ const Comment = ({post, handleComment}) => {
                     name="comments"
                 />
                 <SendIcon style = {{cursor:"pointer"}}  onClick ={handleSendComm}/>
-          </div>
+            </div>
 		</>
 	);
 };

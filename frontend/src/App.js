@@ -12,8 +12,6 @@ import UserWall from './pages/userWall/UserWall';
 import ProtectedRoute from './Auth/ProtectedRoute';
 
 
-
-
 const App = () => {
 
   const ValidToken = () => {
@@ -38,7 +36,6 @@ const App = () => {
   })
 
 
-
   const handleUser = async () =>{
     await axios.get('http://localhost:4200/api/users', { headers: { Authorization:localStorage.getItem('token') } })
     .then((response) => {
@@ -49,9 +46,9 @@ const App = () => {
 
 
   useEffect(() => {
-		if ((!user ||user.id === "") && ValidToken()) {  
-			handleUser();
-		} 
+  	if ((!user ||user.id === "") && ValidToken()) {  
+	  handleUser();
+	  } 
 	},[user]);
 
 

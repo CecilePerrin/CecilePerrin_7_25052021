@@ -33,6 +33,7 @@ const CreatePost = () =>  {
       formData.append('content', newPost.content);
       formData.append('imageUrl', newPost.imageUrl, newPost.imageUrl.name);
       console.log( newPost.imageUrl.name);
+
         await axios.post("http://localhost:4200/api/posts", formData, {
           headers:{"Content-Type": "multipart/form-data",
           Authorization: localStorage.getItem('token')}})
@@ -42,8 +43,8 @@ const CreatePost = () =>  {
             .catch((err)=>{
               console.log(err)
             }) 
-    };
-  }
+    }
+  };
    
   return (
 

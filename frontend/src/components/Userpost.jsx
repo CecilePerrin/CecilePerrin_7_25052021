@@ -23,41 +23,39 @@ const UserPost = ({post, posts, setPosts, handlePosts}) => {
   const content = useRef();
  
 
-  const handleDeletePost = async (id) => {
-		const answer = window.confirm("êtes vous sûr?");
-    if (answer) {
-     await axios.delete(`http://localhost:4200/api/posts/${id}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
-        .then((response) => {
-          const data = posts.filter((post) => post.id !== id);
-          setPosts(data);
-        })
-        .catch(error => console.log(error));
-    }
+const handleDeletePost = async (id) => {
+  const answer = window.confirm("êtes vous sûr?");
+  if (answer) {
+    await axios.delete(`http://localhost:4200/api/posts/${id}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
+      .then((response) => {
+        const data = posts.filter((post) => post.id !== id);
+        setPosts(data);
+      })
+      .catch(error => console.log(error));
+      }
   };
 
-	
+
   const handleComment = async () =>{
     await axios.get(`http://localhost:4200/api/posts/${post.id}/comments`, { headers: { Authorization:localStorage.getItem('token') },
- })
-    .then((response) => {
-      setComments(response.data.comments);
-      console.log(response.data.comments)
-      setInputReset(inputReset +1)
     })
-    .catch(error => {
-     
+      .then((response) => {
+        setComments(response.data.comments);
+        console.log(response.data.comments)
+        setInputReset(inputReset +1)  
+      })
+      .catch(error => {
         console.log(error)
-      
-    });
-  }
+      })
+  };
 
 
   useEffect(() => {
-		if (!comments) {
-			handleComment();
-		}
-	});
- 
+    if (!comments) {
+      handleComment();
+    }
+  });
+
 
   const handleShowComponent = () =>{
       setDisplayComponent(!displayComponent)

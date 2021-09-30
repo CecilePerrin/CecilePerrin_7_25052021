@@ -35,8 +35,8 @@ const SignUp = () => {
     const { register, handleSubmit, formState:{errors}} = useForm({
         resolver: yupResolver(schema)
     });
-   const [redirect, setRedirect] = useState(false);
-   const [error, setError] = useState({errorMessage:""})
+    const [redirect, setRedirect] = useState(false);
+    const [error, setError] = useState({errorMessage:""})
 
         
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");

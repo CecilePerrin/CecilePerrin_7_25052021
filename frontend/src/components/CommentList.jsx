@@ -8,43 +8,43 @@ import axios from "axios";
 
 const CommentList = ({comment, post, comments, setComments, handleComment}) =>{
 
-    const {user} = useContext(UserContext)
-    const [displayModifyComm, setDisplayModifyComm]= useState(false)
-    const [newContent, setNewContent] = useState(null)
+  const {user} = useContext(UserContext)
+  const [displayModifyComm, setDisplayModifyComm]= useState(false)
+  const [newContent, setNewContent] = useState(null)
 
-    const handleDeleteComment = async (id)=>{
-      const answer = window.confirm("êtes vous sûr?");
-      if (answer) {
+  const handleDeleteComment = async (id)=>{
+    const answer = window.confirm("êtes vous sûr?");
+    if (answer) {
       await axios.delete(`http://localhost:4200/api/posts/${post.id}/comments/${comment.id}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
-      .then((response) => {
+        .then((response) => {
         const data = comments.filter((comment) => comment.id !== id);
         setComments(data);
         console.log(response.data);
-      })
-      .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
       }
-    }
+  }
     
-    const showModifyComm =()=>{
-      setDisplayModifyComm(true)
-      console.log(displayModifyComm)
-    }
-    
-    const commentText = {
-      content: newContent,
-      userId: user.id
+  const showModifyComm =()=>{
+    setDisplayModifyComm(true)
   }
 
-    const handleModifyComm = async (e) =>{
-      await axios.put(`http://localhost:4200/api/posts/${post.id}/comments/${comment.id}`,commentText, { headers: { 'Authorization':localStorage.getItem('token') } })
+  const commentText = {
+    content: newContent,
+    userId: user.id
+  }
+
+  const handleModifyComm = async (e) =>{
+    await axios.put(`http://localhost:4200/api/posts/${post.id}/comments/${comment.id}`,commentText, { headers: { 'Authorization':localStorage.getItem('token') } })
       .then(() =>{	
-          setDisplayModifyComm(false)             
-          handleComment()
-  })    
+      setDisplayModifyComm(false)             
+      handleComment()
+      })    
       .catch(err => 
-    console.log(err)
+      console.log(err)
   )}
 
+  
     return (
         <>
             <div className="shareCommentList">

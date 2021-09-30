@@ -27,15 +27,15 @@ const UserWall = () =>{
 	
 	
 	const getUserProfile = async () => {
-			await axios.get(`http://localhost:4200/api/users/${name}`, { headers: { Authorization:localStorage.getItem('token') } })
+		await axios.get(`http://localhost:4200/api/users/${name}`, { headers: { Authorization:localStorage.getItem('token') } })
 			.then((response) => {
-				setProfileUser(response.data.profileUser);
-				console.log(response.data.profileUser)
+			setProfileUser(response.data.profileUser);
+			console.log(response.data.profileUser)
 			})
 			.catch(error => console.log(error));
-		};
+	};
 	
-	  useEffect(() => {
+	useEffect(() => {
 		if (profileUser.name === ""  ) {
 			getUserProfile();
 		}
@@ -52,26 +52,27 @@ const UserWall = () =>{
 	  }
 
 
-	  useEffect(() => {
+	useEffect(() => {
 		if (!userPosts) {
 			handleUserPosts();
-		}
+		}	
 	});
+
 
 	const deleteUser = (e) =>{
 		e.preventDefault();
 		const answer = window.confirm("êtes vous sûr?");
 		if (answer) {
-			axios.delete(`http://localhost:4200/api/users/delete/${name}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
+				axios.delete(`http://localhost:4200/api/users/delete/${name}`,{ headers: { 'Authorization':localStorage.getItem('token') } })
 				.then(response=> {
-					window.location = "/home";
-					console.log(response)
+				window.location = "/home";
+				console.log(response)
 				})    
 				.catch(err => 
-					console.log(err))
+				console.log(err))	
 		} else {
-		console.log("Thing was not deleted to the database.");
-		}
+			console.log("Thing was not deleted to the database.");
+			}
 	};
 
 	
@@ -109,16 +110,16 @@ const UserWall = () =>{
 			}
 			<div className=''>
 				{userPosts && (
-									<>
-										{userPosts.map((post) => (
-											<UserPost
-												key={post.id}
-												post={post}
-											/>
-										))}
-									</>
-								)}
-				</div>	
+					<>
+						{userPosts.map((post) => (
+							<UserPost
+								key={post.id}
+								post={post}
+							/>
+						))}
+					</>
+				)}
+			</div>	
         </>
     )
 }

@@ -26,8 +26,8 @@ const Likes = ({post}) =>{
       }else{
         console.log(error)
       }
-    });
-  }
+    })
+  };
   
   
   const getUserLike = async (id)=>{
@@ -42,14 +42,15 @@ const Likes = ({post}) =>{
       }else{
         console.log(error)
       }
-    });
-   
-  }
+    })
+  };
 
+  
   useEffect (()=>{
       getLike()
       return () =>{source.cancel()} 
   },[])
+
 
   useEffect (()=>{
     getUserLike()
@@ -64,7 +65,7 @@ const Likes = ({post}) =>{
       getLike() 
     })
     .catch(error => console.log(error));
-  }
+  };
 
   
     return(  
@@ -72,9 +73,8 @@ const Likes = ({post}) =>{
           <FavoriteIcon onClick ={handleLikes} type="button" className={isLiked? 'red': 'grey'}/>   
           <span className="postLikeCounter">{likes.length} j'aime</span>
         </div>
-    )
-    
-}
+    )   
+};
 
 
 export default Likes;

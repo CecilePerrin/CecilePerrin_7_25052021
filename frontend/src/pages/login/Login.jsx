@@ -27,16 +27,16 @@ const Login = () => {
 	
 	
 
-    const loginUser = data =>{
-        axios.post('http://localhost:4200/api/users/login',data,{ headers: { Authorization:localStorage.getItem('token') } })
-        .then(response=> {
+	const loginUser = data =>{
+		axios.post('http://localhost:4200/api/users/login',data,{ headers: { Authorization:localStorage.getItem('token') } })
+			.then(response=> {
 			setUser(response.data.user);
 			localStorage.setItem('token', response.data.token)
 			setRedirect(true)
 			console.log("vous êtes connecté")
 		})    
-        .catch(err => 
-            setError({ errorMessage:err.response.data.error}))
+		.catch(err => 
+			setError({ errorMessage:err.response.data.error}))
 			console.log(error)
 	};
 

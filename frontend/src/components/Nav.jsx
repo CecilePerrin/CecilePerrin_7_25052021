@@ -22,7 +22,6 @@ const Nav = () => {
   }
 
 
-
   const handleFilter = async (event) => {
     const searchWord = event.target.value;
     setWordEntered(searchWord);
@@ -41,6 +40,7 @@ const Nav = () => {
     }
   }
 
+
  const showComponent=()=>{
    setDisplayComponent(!displayComponent)
  }
@@ -49,9 +49,7 @@ const Nav = () => {
     setWordEntered("");
   };
 
- 
-    return (
-      
+  return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
         <div className="container-fluid">
             <div className="topbarLeft">
@@ -146,7 +144,7 @@ const Nav = () => {
             </div>
         </div>
       </nav>    
-	);
+  );
 };
 
 export default Nav;
