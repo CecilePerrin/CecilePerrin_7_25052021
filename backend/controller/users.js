@@ -27,7 +27,6 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
 exports.signup = (req, res, next) =>{
-  
   if (!schema.validate(req.body.password)){
      res.status(400).json({error:"mot de passe invalide"})
     } else if (schema.validate(req.body.password)){
@@ -42,8 +41,7 @@ exports.signup = (req, res, next) =>{
               .then(user => res.status(201).json(newToken(user)))
               .catch(error=> res.status(401).json({error:error}))
           })
-          .catch(error =>res.status(500).json({error:error}));
-          
+          .catch(error =>res.status(500).json({error:error})); 
       };
 };
 
@@ -63,8 +61,7 @@ exports.login = (req, res, next) =>{
                     return res.status(401).json({error:'mot de passe incorrect'})
                 }
                 res.status(201).json(newToken(user))
-                console.log("User logged in");
-                
+                console.log("User logged in");      
             })
             .catch(error => res.status(500).json({error:error}))
     })
@@ -74,21 +71,20 @@ exports.login = (req, res, next) =>{
 
 exports.getOneUser = async (req, res, next) =>{
   try {
-    		const user = await models.User.findOne({
-    			attributes: ["id", "firstName","name", "email", "imageUrl", "admin"],
-    			where: {
-    				id: req.user.id
-    			}
-    		});
-    
-    		if (!user) {
-    			throw new Error("désolé nous ne trouvons pas votre compte");
-    		}
-    		res.status(200).json({ user });
-    	} catch (error) {
-    		res.status(400).json({ error: error.message });
-    	}
-}
+    const user = await models.User.findOne({
+      attributes: ["id", "firstName","name", "email", "imageUrl", "admin"],
+      where: {
+      id: req.user.id
+      }
+    });
+    if (!user) {
+    throw new Error("désolé nous ne trouvons pas votre compte");
+    }
+    res.status(200).json({ user });
+  }catch (error) {
+    res.status(400).json({ error: error.message }); 
+  }
+};
 
 
 exports.getAllUser = async (req, res, next)=>{
@@ -103,8 +99,7 @@ exports.getAllUser = async (req, res, next)=>{
     User.findAll(options)
     .then((users) => res.status(200).json ({users}))
     .catch(error => res.status(400).json({error:error}));
- 
-}
+};
 
 
 exports.getUserProfile = async (req, res, next)=>{
@@ -122,7 +117,8 @@ exports.getUserProfile = async (req, res, next)=>{
   }catch (error){
     res.status(400).json({ error: error.message });
   }
-}
+};
+
 
 exports.updateProfile = async (req, res, next ) =>{
   const options = {where:{id : req.user.id}};
@@ -138,7 +134,7 @@ exports.updateProfile = async (req, res, next ) =>{
   .catch(error => res.status(400).json({error:error}));
     });
   });       
-}
+};
     
     
 exports.updatePassword = async (req, res, next) =>{ 
@@ -146,10 +142,10 @@ exports.updatePassword = async (req, res, next) =>{
   const values = { password}
   const options = {where:{id : req.user.id}};
 
-        User.update(options,values)
-          .then(res.status(201).json({message:'Mot de passe modifié!' }))  
-          .catch(error=>res.status(400).json({ error:error }) )       
-}
+  User.update(options,values)
+  .then(res.status(201).json({message:'Mot de passe modifié!' }))  
+  .catch(error=>res.status(400).json({ error:error }) )       
+};
 
 
 

@@ -1,5 +1,4 @@
 const models = require ('../db/models/index')
-const jwt = require('jsonwebtoken');
 const { Post } = models.sequelize.models
 const fs = require('fs');
 const {Like} = models.sequelize.models
@@ -33,7 +32,6 @@ exports.createPost = async (req, res, next) => {
 }
 
 
-
 exports.modifyPost = (req, res, next) =>{
   const content = req.body.content
   const options = {where:{id : req.params.id}};
@@ -44,39 +42,39 @@ exports.modifyPost = (req, res, next) =>{
       console.log(imgUrl)
       const values = {content, imgUrl}
       Post.findOne(options)
-      .then( (post) =>{
-        const filename = post.imgUrl.split('/images/')[1];
-        console.log(values)
-        fs.unlink(`images/${filename}`, () =>{
-      Post.update(values, options) 
-      .then(() => res.status(200).json ({message:'post modifié'}))
-      .catch(error => res.status(400).json({error}));
+        .then( (post) =>{
+          const filename = post.imgUrl.split('/images/')[1];
+          console.log(values)
+          fs.unlink(`images/${filename}`, () =>{
+            Post.update(values, options) 
+              .then(() => res.status(200).json ({message:'post modifié'}))
+              .catch(error => res.status(400).json({error}));
+           });
         });
-      });
-    } else{
-      Post.update( values, options)
+  }else{
+    Post.update( values, options)
       .then(() => res.status(200).json ({message:'post modifié'}))
       .catch(error => res.status(400).json({ error }));
-    }   
-}
+  }   
+};
 
 
   exports.getPostUser = async (req, res, next) =>{
-     const options ={
-       include:[
-        {
-           model: models.User,
-           require:true
-        }
-       ],
-       where:{ userId: req.params.id},
-       order:  [['createdAt', 'DESC']],
-     }
-     console.log(req.params.id)
-     Post.findAll(options)
-    .then(posts => res.status(200).json({ posts }))
-    .catch(error => res.status(404).json({ error }))
-  }
+    const options ={
+      include:[
+      {
+        model: models.User,
+        require:true
+      }
+      ],
+      where:{ userId: req.params.id},
+      order:  [['createdAt', 'DESC']],
+    }
+    console.log(req.params.id)
+    Post.findAll(options)
+      .then(posts => res.status(200).json({ posts }))
+      .catch(error => res.status(404).json({ error }))
+  };
 
 
 
@@ -105,9 +103,8 @@ exports.getAllPost = (req, res, next) =>{
     }
     Post.findAll(options)
     .then(posts => res.status(200).json({ posts }))
-    .catch(error => res.status(404).json({ error }))
-   
-}
+    .catch(error => res.status(404).json({ error })) 
+};
 
 
 exports.deletepost = (req, res, next) =>{
@@ -124,7 +121,6 @@ exports.deletepost = (req, res, next) =>{
 };
 
 //LIKE 
-
 
 exports.likeOnePost = async(req, res, next)=>{
   try {
@@ -144,6 +140,7 @@ exports.likeOnePost = async(req, res, next)=>{
   }
 }
 
+
 exports.getUserLike = async (req, res, next) =>{
   const existingLike = await Like.findOne({
     where: { userId: req.user.id, postId: req.params.postId }
@@ -154,6 +151,7 @@ exports.getUserLike = async (req, res, next) =>{
     res.status(200).json({ like: false })
   }
 }
+
 
 exports.getAllLikes = async (req, res, next) =>{
   await Like.findAll({
@@ -181,9 +179,8 @@ exports.createComment = async (req, res, next) =>{
       res.status(400).json({ error })
     } 
   }
+};
 
-
-}
 
 exports.getAllComments= (req, res, next) =>{
   const limit = 10
@@ -203,8 +200,7 @@ exports.getAllComments= (req, res, next) =>{
   Comment.findAll(options)
   .then(comments => res.status(200).json({ comments }))
   .catch(error => res.status(404).json({ error }))
-
-}
+};
 
 
 exports.modifyComment= async (req, res, next) =>{
@@ -222,9 +218,8 @@ exports.modifyComment= async (req, res, next) =>{
   } catch (error) {
     res.status(400).json({ error })
   }
-  }   
+};   
   
-
 
 exports.deleteComment= async (req, res, next) =>{
   try {
@@ -244,7 +239,7 @@ exports.deleteComment= async (req, res, next) =>{
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-}
+};
 
 
 
