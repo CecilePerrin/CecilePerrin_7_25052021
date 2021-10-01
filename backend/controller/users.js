@@ -69,6 +69,25 @@ exports.login = (req, res, next) =>{
 };
 
 
+exports.confirmPassword = (req, res, next) =>{
+  User.findOne({ where: { id: req.params.id} })
+        .then(user => {
+            if(!user){
+                return res.status(401).json({error: "utilisateur non trouvé"})
+            }
+            bcrypt.compare(req.body.oldPassword, user.password) 
+            .then(valid =>{ 
+                if (!valid){
+                    return res.status(401).json({error:'mot de passe incorrect'})
+                }
+                res.status(201).json({message:"mot de passe validé"})   
+            })
+            .catch(error => res.status(500).json({error:error}))
+    })
+    .catch(error => res.status(500).json({error:error}));
+};
+
+
 exports.getOneUser = async (req, res, next) =>{
   try {
     const user = await models.User.findOne({
@@ -130,23 +149,31 @@ exports.updateProfile = async (req, res, next ) =>{
     const filename = user.imageUrl.split('/images/')[1];
     fs.unlink(`images/${filename}`, () =>{
   User.update(values, options) 
-  .then(() => res.status(200).json ({values}))
+  .then((user) => res.status(200).json ({user}))
   .catch(error => res.status(400).json({error:error}));
     });
   });       
 };
     
     
-exports.updatePassword = async (req, res, next) =>{ 
+exports.updatePassword = async (req, res) =>{ 
   const password = await bcrypt.hash(req.body.password, 10);
-  const values = { password}
-  const options = {where:{id : req.user.id}};
+  const values = {password}
+  const options = {where:{id : req.user.id}}; 
 
-  User.update(options,values)
-  .then(res.status(201).json({message:'Mot de passe modifié!' }))  
-  .catch(error=>res.status(400).json({ error:error }) )       
-};
-
+   User.findOne({ where: { id: req.user.id } })
+    .then(user => {
+      if(!user){
+          return res.status(401).json({error: "utilisateur non trouvé"})
+      }
+      else{
+            User.update( values, options)
+            .then(res.status(201).json({message:'Mot de passe modifié!' }))  
+            .catch(error=>res.status(400).json({ error:error }) )       
+        }     
+      })
+      .catch(error => res.status(500).json({error})) 
+}
 
 
 exports.deleteProfile =  (req, res, next) =>{

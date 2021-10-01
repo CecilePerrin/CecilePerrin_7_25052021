@@ -81,7 +81,7 @@ const Nav = () => {
                     {data.length === 0 ? (
                       <SearchIcon />
                     ) : (
-                      <CloseIcon id="clearBtn" onClick={clearInput} tabindex="0"/>
+                      <CloseIcon  aria-label="fermer" id="clearBtn" onClick={clearInput} tabindex="0"/>
                     )}
                   </div>
                 </div>

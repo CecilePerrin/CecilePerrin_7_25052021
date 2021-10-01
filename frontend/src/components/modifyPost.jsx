@@ -47,7 +47,7 @@ return (
       <div className="postWrapper">
         <div className="headerModify">
             <span className="headerTextModify" >Modifier la publication</span>
-            <Cancel onClick={handleShowModify} />
+            <Cancel  aria-label="fermer" onClick={handleShowModify} />
             <hr className="shareHr" />
         </div>
         <div className="postTop">
@@ -81,6 +81,7 @@ return (
                    alt=""
               />
               <Cancel 
+                  aria-label="fermer"
                   tabindex="0"
                   className="shareCancelImg" 
                   onClick={() =>setNewFile(null)} 
@@ -90,7 +91,7 @@ return (
         <form className="shareBottom" onSubmit={(id)=>handleUpdate(id)}>
             <div className="">
                 <label htmlFor="modifyFile" className="shareOption">
-                  <PermMedia style ={{color : "#D14662"}} className="shareIcon" tabindex="0" />
+                  <PermMedia aria-label="choisir votre image"style ={{color : "#D14662"}} className="shareIcon" tabindex="0" />
                   <span className="shareOptionText">Photo or Video</span>
                   <input
                     style={{ display: "none" }}

@@ -41,6 +41,7 @@ const UserWall = () =>{
 		}
 	});
 
+	
 	const handleUserPosts = async () =>{
 		const userId = profileUser.id;
 		await axios.get(`http://localhost:4200/api/posts/${userId}`, { headers: { Authorization:localStorage.getItem('token') } })

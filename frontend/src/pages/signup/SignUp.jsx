@@ -9,7 +9,7 @@ import * as yup from "yup"
 
 
 
-const PASSWORD_REGEX =  /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
+// const PASSWORD_REGEX =  /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
 
 const schema = yup.object().shape({
     firstName: yup
@@ -25,7 +25,7 @@ const schema = yup.object().shape({
     password: yup
     .string()
     .required('veuillez renseigner un mot de passe')
-    .matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
+    // .matches(PASSWORD_REGEX, "veuillez rentrer un mot de passe plus fort")
     .min(8, "votre mot de passe doit faire plus de 8 caractères")
 });
 
@@ -47,7 +47,7 @@ const SignUp = () => {
             localStorage.setItem("token", response.data.token)
             setRedirect(true)
         })    
-        .catch(err => setError({ errorMessage:'ce mail est déjà pris'})|| setError({errorMessage:err.response.data.error}))          
+        .catch(err => setError({ errorMessage:'ce mail est déjà pris'}))          
     };
 
     return (

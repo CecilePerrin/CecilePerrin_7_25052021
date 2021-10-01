@@ -4,16 +4,22 @@
 
 I had to create an corporate social network for a fictive compagny. The goal was to give to the employee the possibility to connect and post with their coworker. For this i had to make sure that they can:
 
--Subscribe, login and stay connected in the application
--Modify their informations (create delete update)
--Post gifs picture and texte with other people (create delete update)
--Can be moderate by someone
+>Subscribe, login and stay connected in the application
+
+>Modify their informations (create delete update)
+
+>Post gifs picture and texte with other people (create delete update)
+
+>Can be moderate by someone
+
 
 ## Technologies used:
 
--Frontend: React.js, React router, React hook, yup, Bootsrap, Axios, Local storage
--Backend: Node.js, Express
--Database: MySQL, Sequelize ORM, MySQL Workbench
+>Frontend: React.js, React router, React hook, yup, Bootsrap, Axios, Local storage
+
+>Backend: Node.js, Express
+
+>Database: MySQL, Sequelize ORM, MySQL Workbench
 
 
 ## Getting started
@@ -38,7 +44,7 @@ npm start
 
 ### Database:
 
-in the file "config.json" put your username et password. Make sur that you've installed MySql and create locally the base "groupomaniadb" 
+In the file "config.json" put your username et password. Make sur that you've installed MySql and create locally the base "groupomaniadb" 
 
 then in the terminal tape :
 
@@ -46,6 +52,14 @@ then in the terminal tape :
 npx sequelize-cli db:create
 npx sequelize-cli db:migrate
 ```
+When the database is created and you registered an user you can define an moderator by doing this query :
+
+```
+UPDATE users
+SET admin = '1'
+WHERE id = ''
+```
+
 
 
 

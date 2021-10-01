@@ -6,7 +6,7 @@ import UserPost from "../../components/Userpost.jsx";
 import axios from "axios";
 
 
-const Home = () => {
+const Home = ({ValidToken}) => {
 
 	const [posts, setPosts] = useState(0);
 	const [inputReset, setInputReset] = useState(0)
@@ -16,6 +16,7 @@ const Home = () => {
 		.then((response) => {
 			console.log("voici les posts")
 			setPosts(response.data.posts);
+			ValidToken()
 		})
 		.catch(error => console.log(error));
 		}

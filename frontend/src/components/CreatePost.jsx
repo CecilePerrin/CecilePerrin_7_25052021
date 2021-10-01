@@ -72,14 +72,14 @@ const CreatePost = () =>  {
           {file && (
           <div className="shareImgContainer">
             <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
-            <Cancel tabindex="0" className="shareCancelImg" onClick={() =>
+            <Cancel aria-label="fermer" tabindex="0" className="shareCancelImg" onClick={() =>
             setFile(null)} />
           </div>
           )}
           <form className="shareBottom" onSubmit={submitHandler}>
             <div className="shareOptions">
                 <label htmlFor="file" className="shareOption">
-                  <PermMedia style ={{color : "#D14662"}} className="shareIcon"  tabindex="0"/>
+                  <PermMedia aria-label="choisir votre image" style ={{color : "#D14662"}} className="shareIcon"  tabindex="0"/>
                   <span className="shareOptionText">Photo or Video</span>
                   <input
                     style={{ display: "none" }}
